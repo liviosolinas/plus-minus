@@ -1037,6 +1037,7 @@ function touchStarted() {
     let ctx = getAudioContext();
     if (ctx.state !== "running") {
         ctx.resume().then(() => {
+            console.log("AudioContext attivato da touch");
             if (!audioInitialized) {
                 initAudio();
                 audioInitialized = true;
@@ -1044,6 +1045,7 @@ function touchStarted() {
         });
     }
 }
+
 
 
 function boxHasBlack(x, y, w, h)
