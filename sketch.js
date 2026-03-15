@@ -108,21 +108,7 @@ function delay(ms)
 function preload() 
 {
     if (isDebug) console.log("\n=====preload()======="); 
-    /* eseguitodentro initAudio()
-    //caricamento senza callback
-    for (let i = 0; i < 110; i++) 
-    {
-        audioFiles[i] = loadSound('data/sound' + i + '.mp3');
-    }
-
-    for (let i = 0; i < audioFiles.length; i++) 
-    {
-      if (!audioFiles[i] || !audioFiles[i].isLoaded()) 
-      {
-        console.log("❌ File mancante o non caricato:", i);
-      }
-    }
-    */
+    
 }
 
 
