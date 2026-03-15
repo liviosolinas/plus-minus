@@ -569,84 +569,51 @@ class Evento {
                 traspose = -traspose;
             }
         }
-
         if (!isLayer) 
         {
-            if (gspHard) 
-            {
-                gspHard.stop();
-            }
-            if (gspSoft) 
-            {
-                gspSoft.stop();
-            }
-                        
-            
+            // Prima ferma tutto
+            gspHard.stop();
+            gspSoft.stop();
+        
+            // Poi scegli cosa attivare
             if (this.centralSound.timbroNoise == t_Timbre.Hard) 
             {
                 randomnessGraniHard.setValue(
-                    random(
-                        k_randomnessGraniHard - s_randomnessGraniHard,
-                        k_randomnessGraniHard + k_randomnessGraniHard
-                    )
+                    random(k_randomnessGraniHard - s_randomnessGraniHard,
+                           k_randomnessGraniHard + s_randomnessGraniHard)
                 );
-                pitchGraniHard.setValue(
-                    random(1.0 - pitchRange, 1.0 + pitchRange)
-                );
+                pitchGraniHard.setValue(random(1.0 - pitchRange, 1.0 + pitchRange));
                 grainSizeGraniHard.setValue(
-                    random(
-                        k_grainSizeGraniHard - s_grainSizeGraniHard,
-                        k_grainSizeGraniHard + s_grainSizeGraniHard
-                    )
-                ); ////positionGraniHard.setValue( random( (float)lengthGraniHard - 400));
-                intervalGraniHard.setValue(
-                    random(
-                        k_intervalGraniHard - s_intervalGraniHard,
-                        k_intervalGraniHard + s_intervalGraniHard
-                    )
+                    random(k_grainSizeGraniHard - s_grainSizeGraniHard,
+                           k_grainSizeGraniHard + s_grainSizeGraniHard)
                 );
-                gspHard.start() //pause(false); //audiocontext.out.addInput(gainGraniHard);
-                if (isDebug)
-                    console.log(
-                        " timbroNoise=" + this.centralSound.timbroNoise
-                    );
-            } 
+                intervalGraniHard.setValue(
+                    random(k_intervalGraniHard - s_intervalGraniHard,
+                           k_intervalGraniHard + s_intervalGraniHard)
+                );
+        
+                gspHard.start();
+            }
             else if (this.centralSound.timbroNoise == t_Timbre.Soft) 
             {
-                console.log(randomnessGraniSoft);
                 randomnessGraniSoft.setValue(
-                    random(
-                        k_randomnessGraniSoft - s_randomnessGraniSoft,
-                        k_randomnessGraniSoft + s_randomnessGraniSoft
-                    )
+                    random(k_randomnessGraniSoft - s_randomnessGraniSoft,
+                           k_randomnessGraniSoft + s_randomnessGraniSoft)
                 );
-                pitchGraniSoft.setValue(
-                    random(1.0 - pitchRange, 1.0 + pitchRange)
-                ); //positionGraniSoft.setValue( random( (float)lengthGraniSoft - 400));
+                pitchGraniSoft.setValue(random(1.0 - pitchRange, 1.0 + pitchRange));
                 grainSizeGraniSoft.setValue(
-                    random(
-                        k_grainSizeGraniSoft - s_grainSizeGraniSoft,
-                        k_grainSizeGraniSoft + s_grainSizeGraniSoft
-                    )
+                    random(k_grainSizeGraniSoft - s_grainSizeGraniSoft,
+                           k_grainSizeGraniSoft + s_grainSizeGraniSoft)
                 );
                 intervalGraniSoft.setValue(
-                    random(
-                        k_intervalGraniSoft - s_intervalGraniSoft,
-                        k_intervalGraniSoft + s_intervalGraniSoft
-                    )
+                    random(k_intervalGraniSoft - s_intervalGraniSoft,
+                           k_intervalGraniSoft + s_intervalGraniSoft)
                 );
-                gspSoft.stop(); //audiocontext.out.addInput(gainGraniSoft);
-                if (isDebug)
-                    console.log(
-                        " timbroNoise=" + this.centralSound.timbroNoise
-                    );
-            } else {
-                if (isDebug)
-                    console.log(
-                        " timbroNoise=" + this.centralSound.timbroNoise
-                    );
+        
+                gspSoft.start();
             }
-        } 
+        }
+
         
         //esecuzione del suono centrale
         fineCS = this.playCentralSound(
