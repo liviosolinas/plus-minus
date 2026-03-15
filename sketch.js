@@ -156,13 +156,14 @@ function setup()
     controls.id("controls");
     controls.style("margin-bottom", "10px");
     
-    createButton("▶ Play").mousePressed(btnPlay);
-    createButton("⏮ First").mousePressed(btnFirst);
-    createButton("◀ Before").mousePressed(btnBefore);
-    createButton("▶ Next").mousePressed(btnNext);
-    createButton("⏭ Last").mousePressed(btnLast);
-    createButton("🔼 Page Up").mousePressed(btnPageUp);
-    createButton("🔽 Page Down").mousePressed(btnPageDown);
+    // Bottoni assegnati al contenitore
+    createButton("▶ Play").parent("controls").mousePressed(btnPlay);
+    createButton("⏮ First").parent("controls").mousePressed(btnFirst);
+    createButton("◀ Before").parent("controls").mousePressed(btnBefore);
+    createButton("▶ Next").parent("controls").mousePressed(btnNext);
+    createButton("⏭ Last").parent("controls").mousePressed(btnLast);
+    createButton("🔼 Page Up").parent("controls").mousePressed(btnPageUp);
+    createButton("🔽 Page Down").parent("controls").mousePressed(btnPageDown);
     
     // Crea il canvas
     createCanvas(500, 500);
