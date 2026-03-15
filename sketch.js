@@ -166,8 +166,8 @@ function setup()
     createButton("◀ Before").parent(controls).mousePressed(btnBefore);
     createButton("▶ Next").parent(controls).mousePressed(btnNext);
     createButton("⏭ Last").parent(controls).mousePressed(btnLast);
-    createButton("🔼 Page Up").parent(controls).mousePressed(btnPageUp);
-    createButton("🔽 Page Down").parent(controls).mousePressed(btnPageDown);
+    createButton("🔼 Up").parent(controls).mousePressed(btnPageUp);
+    createButton("🔽 Down").parent(controls).mousePressed(btnPageDown);
 
     // Canvas dentro <main>, sotto i bottoni
     let cnv = createCanvas(500, 500);
