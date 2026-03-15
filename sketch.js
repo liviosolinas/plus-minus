@@ -27,6 +27,9 @@ class ArrayList extends Array {
 // [processing-p5-convert] import beads.*;
 //// [processing-p5-convert] import javax.sound.midi.*;
 
+let TOTAL_FILES = 110;
+let filesLoaded = 0;
+let audioReady = false;
 let audioInitialized = false;
 let TIPO_ESECUZIONE_MIDI = "MIDI";
 let TIPO_ESECUZIONE_FILES = "FILES";
@@ -403,22 +406,45 @@ function initAudio() {
     masterGain.connect();
     masterGain.amp(1);
 
-    for (let i = 0; i < 110; i++) {
-        audioFiles[i] = loadSound('data/sound' + i + '.mp3', () => {
-            console.log("Caricato:", i);
-        }, () => {
-            console.log("❌ Errore caricamento:", i);
-        });
+    filesLoaded = 0;
+
+    for (let i = 0; i < TOTAL_FILES; i++) {
+        audioFiles[i] = loadSound(
+            'data/sound' + i + '.mp3',
+
+            // SUCCESSO
+            () => {
+                filesLoaded++;
+                console.log("Caricato:", i);
+
+                if (filesLoaded === TOTAL_FILES) {
+                    console.log("🎉 Tutti i file audio caricati!");
+                    onAllAudioLoaded();
+                }
+            },
+
+            // ERRORE
+            () => {
+                console.log("❌ Errore caricamento:", i);
+            }
+        );
     }
-    
-    for (let i = 0; i < audioFiles.length; i++) {
+}
+
+function onAllAudioLoaded() {
+    console.log("🔧 Creo i canali audio...");
+
+    for (let i = 0; i < TOTAL_FILES; i++) {
         channels[i] = new AudioChannel(audioFiles[i]);
         channels[i].soundFile.disconnect();
         channels[i].soundFile.connect(masterGain);
     }
-    
+
     eventoPrec = new Evento();
-    setupMusic(); // ora è sicuro
+    setupMusic();
+
+    audioReady = true;
+    console.log("🎉 Audio pronto!");
 }
 
 function keyTyped() 
@@ -742,6 +768,11 @@ function mousePressed()
     {
         console.log("✅ AudioContext:" + ctx.state);
     }
+    if (!audioReady) {
+        console.log("⏳ Attendi: audio non ancora pronto");
+        return;
+    }
+    
     if (isDebug) 
     {
         //console.log("mousePressed: mouseX=" + mouseX + " mouseY=" + mouseY);
