@@ -26,6 +26,8 @@ class ArrayList extends Array {
 // [processing-p5-convert] import ddf.minim.ugens.*;
 // [processing-p5-convert] import beads.*;
 //// [processing-p5-convert] import javax.sound.midi.*;
+
+let audioInitialized = false;
 let TIPO_ESECUZIONE_MIDI = "MIDI";
 let TIPO_ESECUZIONE_FILES = "FILES";
 let TIPO_ESECUZIONE = TIPO_ESECUZIONE_FILES;
@@ -125,26 +127,7 @@ function setup()
     rectMode(CORNER);
     textAlign(LEFT);
     strokeWeight(1.5);
-
     
-    masterGain = new p5.Gain();   //
-    masterGain.connect();
-    //masterGain.amp(0);    //silenzio
-    masterGain.amp(1);    //suono totale
-
-    //caricamento senza callback
-    for (let i = 0; i < audioFiles.length; i++) 
-    {
-        audioFiles[i].playMode("restart"); //
-        channels[i] = new AudioChannel(audioFiles[i]);
-        channels[i].soundFile.disconnect();
-        channels[i].soundFile.connect(masterGain);
-    }
-
-    //ALERT: commentato per testare audio non funzionante
-    setupMusic();
-
-
     instantiateTextBox();
     //eliminazine dell'impostazione della scheda
     /*
@@ -414,6 +397,22 @@ function Mydraw()
     color(0);
     //Mydraw();//
     //noLoop(); 
+}
+
+function initAudio() {
+    console.log("🎵 Inizializzo l’audio...");
+
+    masterGain = new p5.Gain();
+    masterGain.connect();
+    masterGain.amp(1);
+
+    for (let i = 0; i < audioFiles.length; i++) {
+        channels[i] = new AudioChannel(audioFiles[i]);
+        channels[i].soundFile.disconnect();
+        channels[i].soundFile.connect(masterGain);
+    }
+
+    setupMusic(); // ora è sicuro
 }
 
 function keyTyped() 
@@ -727,6 +726,10 @@ function mousePressed()
         ctx.resume().then(() => 
         {
             console.log("✅ AudioContext attivato");
+            if (!audioInitialized) {
+                initAudio();   // <-- QUI parte tutto l’audio
+                audioInitialized = true;
+            }
         });
     }
     else
