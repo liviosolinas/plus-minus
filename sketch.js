@@ -151,12 +151,16 @@ function setup()
     eventoPrec = new Evento();
     */
 
-    // Contenitore per i bottoni
+// Prendo il <main> definito in index.html
+    let mainContainer = select('main');
+
+    // Contenitore per i bottoni dentro <main>
     let controls = createDiv();
     controls.id("controls");
     controls.style("margin-bottom", "10px");
+    controls.parent(mainContainer);
 
-    // Bottoni assegnati al contenitore (usa l’oggetto, non la stringa)
+    // Bottoni dentro controls
     createButton("▶ Play").parent(controls).mousePressed(btnPlay);
     createButton("⏮ First").parent(controls).mousePressed(btnFirst);
     createButton("◀ Before").parent(controls).mousePressed(btnBefore);
@@ -165,9 +169,11 @@ function setup()
     createButton("🔼 Page Up").parent(controls).mousePressed(btnPageUp);
     createButton("🔽 Page Down").parent(controls).mousePressed(btnPageDown);
 
-    // Ora il canvas
-    createCanvas(500, 500);
-               
+    // Canvas dentro <main>, sotto i bottoni
+    let cnv = createCanvas(500, 500);
+    cnv.parent(mainContainer);
+
+    
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
 
     //ERRORE>f = createFont("Arial", 16, true);
