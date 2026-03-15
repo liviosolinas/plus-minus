@@ -166,9 +166,14 @@ function setup()
     createButton("🔼 Page Up").parent("controls").mousePressed(btnPageUp);
     createButton("🔽 Page Down").parent("controls").mousePressed(btnPageDown);
     
-    // Crea il canvas
-    createCanvas(500, 500);
+    // Contenitore per il canvas
+    let canvasContainer = createDiv();
+    canvasContainer.id("canvasContainer");
     
+    // Crea il canvas dentro il contenitore
+    let cnv = createCanvas(500, 500);
+    cnv.parent("canvasContainer");
+               
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
 
     //ERRORE>f = createFont("Arial", 16, true);
