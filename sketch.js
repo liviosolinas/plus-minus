@@ -469,9 +469,18 @@ function onAllAudioLoaded() {
 }
 
 function btnPlay() {
+    let ctx = getAudioContext();
+    if (ctx.state !== "running") {
+        ctx.resume();
+    }
+    if (!audioReady) {
+        console.log("⏳ Audio non ancora pronto");
+        return;
+    }
     playSW = !playSW;
     Mydraw();
 }
+
 
 function btnFirst() {
     //pag = 0;
@@ -619,9 +628,6 @@ function keyPressed()
 
 function playMusicItem(tempo, pag, iEvento, eventoPrec) 
 {
-    /*
-    TEST
-    */
     console.log("IN: playMusicItem()"); 
     //loop(); //riattiva il draw 
     
