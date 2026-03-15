@@ -150,9 +150,11 @@ function setup()
     /*spostato in initAudio
     eventoPrec = new Evento();
     */
-    
-    // Crea il canvas
-    createCanvas(500, 500);
+
+    // Contenitore per i bottoni
+    let controls = createDiv();
+    controls.id("controls");
+    controls.style("margin-bottom", "10px");
     
     createButton("▶ Play").mousePressed(btnPlay);
     createButton("⏮ First").mousePressed(btnFirst);
@@ -161,6 +163,9 @@ function setup()
     createButton("⏭ Last").mousePressed(btnLast);
     createButton("🔼 Page Up").mousePressed(btnPageUp);
     createButton("🔽 Page Down").mousePressed(btnPageDown);
+    
+    // Crea il canvas
+    createCanvas(500, 500);
     
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
 
