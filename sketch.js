@@ -154,6 +154,7 @@ function setup()
     // Contenitore per i bottoni
     let controls = createDiv();
     controls.id("controls");
+    controls.parent(document.body);
     controls.style("margin-bottom", "10px");
     
     // Bottoni assegnati al contenitore
