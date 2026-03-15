@@ -149,7 +149,9 @@ function setup()
     // Sostituisce ArrayList con array JavaScript
     //alFlags = []; fatto in dichiarazione
     //noteToPlay = []; fatto in dichiarazione
+    /*spostato in initAudio
     eventoPrec = new Evento();
+    */
     
     // Crea il canvas
     createCanvas(500, 500);
@@ -411,7 +413,7 @@ function initAudio() {
         channels[i].soundFile.disconnect();
         channels[i].soundFile.connect(masterGain);
     }
-
+    eventoPrec = new Evento();
     setupMusic(); // ora è sicuro
 }
 
