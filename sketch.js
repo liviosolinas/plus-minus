@@ -114,6 +114,14 @@ function preload()
     {
         audioFiles[i] = loadSound('data/sound' + i + '.mp3');
     }
+
+    for (let i = 0; i < audioFiles.length; i++) 
+    {
+      if (!audioFiles[i] || !audioFiles[i].isLoaded()) 
+      {
+        console.log("❌ File mancante o non caricato:", i);
+      }
+    }
 }
 
 
