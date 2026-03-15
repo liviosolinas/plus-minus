@@ -154,25 +154,19 @@ function setup()
     // Contenitore per i bottoni
     let controls = createDiv();
     controls.id("controls");
-    controls.parent(document.body);
     controls.style("margin-bottom", "10px");
-    
-    // Bottoni assegnati al contenitore
-    createButton("▶ Play").parent("controls").mousePressed(btnPlay);
-    createButton("⏮ First").parent("controls").mousePressed(btnFirst);
-    createButton("◀ Before").parent("controls").mousePressed(btnBefore);
-    createButton("▶ Next").parent("controls").mousePressed(btnNext);
-    createButton("⏭ Last").parent("controls").mousePressed(btnLast);
-    createButton("🔼 Page Up").parent("controls").mousePressed(btnPageUp);
-    createButton("🔽 Page Down").parent("controls").mousePressed(btnPageDown);
-    
-    // Contenitore per il canvas
-    let canvasContainer = createDiv();
-    canvasContainer.id("canvasContainer");
-    
-    // Crea il canvas dentro il contenitore
-    let cnv = createCanvas(500, 500);
-    cnv.parent("canvasContainer");
+
+    // Bottoni assegnati al contenitore (usa l’oggetto, non la stringa)
+    createButton("▶ Play").parent(controls).mousePressed(btnPlay);
+    createButton("⏮ First").parent(controls).mousePressed(btnFirst);
+    createButton("◀ Before").parent(controls).mousePressed(btnBefore);
+    createButton("▶ Next").parent(controls).mousePressed(btnNext);
+    createButton("⏭ Last").parent(controls).mousePressed(btnLast);
+    createButton("🔼 Page Up").parent(controls).mousePressed(btnPageUp);
+    createButton("🔽 Page Down").parent(controls).mousePressed(btnPageDown);
+
+    // Ora il canvas
+    createCanvas(500, 500);
                
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
 
