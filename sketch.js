@@ -151,14 +151,14 @@ function setup()
     eventoPrec = new Evento();
     */
 
-// Prendo il <main> definito in index.html
-    let mainContainer = select('main');
+    // Prendo il <main> dall'HTML usando il DOM standard
+    let mainContainer = document.querySelector('main');
 
     // Contenitore per i bottoni dentro <main>
     let controls = createDiv();
     controls.id("controls");
     controls.style("margin-bottom", "10px");
-    controls.parent(mainContainer);
+    controls.parent(mainContainer);   // <-- qui ora mainContainer è un vero nodo DOM
 
     // Bottoni dentro controls
     createButton("▶ Play").parent(controls).mousePressed(btnPlay);
@@ -171,7 +171,7 @@ function setup()
 
     // Canvas dentro <main>, sotto i bottoni
     let cnv = createCanvas(500, 500);
-    cnv.parent(mainContainer);
+    cnv.parent
 
     
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
