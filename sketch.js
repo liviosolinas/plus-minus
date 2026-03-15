@@ -108,7 +108,6 @@ function delay(ms)
 function preload() 
 {
     if (isDebug) console.log("\n=====preload()======="); 
-    audiocontext = getAudioContext();
     //caricamento senza callback
     for (let i = 0; i < 110; i++) 
     {
