@@ -160,7 +160,7 @@ class GranularSamplePlayer
       this.pitch = 1.0;         // playbackRate
       this.randomness = 0.0;    // variazione casuale
   
-      this.output = this.context.createGain();
+      this.output = getAudioContext().createGain();
       this.isPlaying = false;
     }
   
