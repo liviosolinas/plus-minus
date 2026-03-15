@@ -112,8 +112,6 @@ function preload()
     {
         audioFiles[i] = loadSound('data/sound' + i + '.mp3');
     }
-
-    //testSong = loadSound('data/sound50.mp3');
 }
 
 
