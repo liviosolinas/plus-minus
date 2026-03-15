@@ -1058,6 +1058,7 @@ function setupMusic() {
   }
     */
   // 🔬 Granular synthesis: GraniHard
+    let audiocontext = getAudioContext();
   loadSound('data/GraniHard.mp3', (sound) => {
     const buffer = sound.buffer;
     gspHard = new GranularSamplePlayer(audiocontext, buffer);
@@ -1074,7 +1075,7 @@ function setupMusic() {
     gspHard.setPosition(positionGraniHard);
     gspHard.setPitch(pitchGraniHard);
 
-    gainGraniHard = audiocontext.createGain();
+    gainGraniHard = getAudioContext().createGain();
     gainGraniHard.gain.value = 0.5;
     gspHard.connect(gainGraniHard);
     gainGraniHard.connect(masterGain);  //masterGainWeb
@@ -1097,7 +1098,7 @@ function setupMusic() {
     gspSoft.setPosition(positionGraniSoft);
     gspSoft.setPitch(pitchGraniSoft);
 
-    gainGraniSoft = audiocontext.createGain();
+    gainGraniSoft = getAudioContext().createGain();
     gainGraniSoft.gain.value = 0.5;
     gspSoft.connect(gainGraniSoft);
     gainGraniSoft.connect(masterGain); //masterGainWeb
@@ -1106,7 +1107,7 @@ function setupMusic() {
 
 function setupGrain(sound, type) 
 {
-    let gainNode = audiocontext.createGain();
+    let gainNode = getAudioContext().createGain();
     gainNode.gain.value = type === "hard" ? 0.5 : 0.2;
     gainNode.connect(masterGain);
 
@@ -1141,7 +1142,7 @@ function setupGrain(sound, type)
 
 function createGain(value) 
 {
-    let gainNode = audiocontext.createGain();
+    let gainNode = getAudioContext().createGain();
     gainNode.gain.value = value;
     return gainNode;
 }
