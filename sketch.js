@@ -474,7 +474,7 @@ function btnPlay() {
 }
 
 function btnFirst() {
-    pag = 0;
+    //pag = 0;
     iEvento = 0;
     Mydraw();
 }
@@ -500,7 +500,7 @@ function btnNext() {
 }
 
 function btnLast() {
-    pag = dimPagine - 1;
+    //pag = dimPagine - 1;
     iEvento = dimQuadrati - 1;
     Mydraw();
 }
