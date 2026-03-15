@@ -108,6 +108,7 @@ function delay(ms)
 function preload() 
 {
     if (isDebug) console.log("\n=====preload()======="); 
+    /* eseguitodentro initAudio()
     //caricamento senza callback
     for (let i = 0; i < 110; i++) 
     {
@@ -121,6 +122,7 @@ function preload()
         console.log("❌ File mancante o non caricato:", i);
       }
     }
+    */
 }
 
 
@@ -415,11 +417,20 @@ function initAudio() {
     masterGain.connect();
     masterGain.amp(1);
 
+    for (let i = 0; i < 110; i++) {
+        audioFiles[i] = loadSound('data/sound' + i + '.mp3', () => {
+            console.log("Caricato:", i);
+        }, () => {
+            console.log("❌ Errore caricamento:", i);
+        });
+    }
+    
     for (let i = 0; i < audioFiles.length; i++) {
         channels[i] = new AudioChannel(audioFiles[i]);
         channels[i].soundFile.disconnect();
         channels[i].soundFile.connect(masterGain);
     }
+    
     eventoPrec = new Evento();
     setupMusic(); // ora è sicuro
 }
