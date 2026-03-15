@@ -153,6 +153,15 @@ function setup()
     
     // Crea il canvas
     createCanvas(500, 500);
+    
+    createButton("▶ Play").mousePressed(btnPlay);
+    createButton("⏮ First").mousePressed(btnFirst);
+    createButton("◀ Before").mousePressed(btnBefore);
+    createButton("▶ Next").mousePressed(btnNext);
+    createButton("⏭ Last").mousePressed(btnLast);
+    createButton("🔼 Page Up").mousePressed(btnPageUp);
+    createButton("🔽 Page Down").mousePressed(btnPageDown);
+    
     pickGR1 = createGraphics(500,500); //usato per distinguere graficamente Timbro
 
     //ERRORE>f = createFont("Arial", 16, true);
@@ -446,6 +455,56 @@ function onAllAudioLoaded() {
     audioReady = true;
     console.log("🎉 Audio pronto!");
 }
+
+function btnPlay() {
+    playSW = !playSW;
+    Mydraw();
+}
+
+function btnFirst() {
+    pag = 0;
+    iEvento = 0;
+    Mydraw();
+}
+
+function btnBefore() {
+    iEvento--;
+    if (iEvento < 0) {
+        iEvento = dimQuadrati - 1;
+        pag--;
+    }
+    if (pag < 0) pag = dimPagine - 1;
+    Mydraw();
+}
+
+function btnNext() {
+    iEvento++;
+    if (iEvento >= dimQuadrati) {
+        iEvento = 0;
+        pag++;
+    }
+    if (pag >= dimPagine) pag = 0;
+    Mydraw();
+}
+
+function btnLast() {
+    pag = dimPagine - 1;
+    iEvento = dimQuadrati - 1;
+    Mydraw();
+}
+
+function btnPageUp() {
+    pag--;
+    if (pag < 0) pag = dimPagine - 1;
+    Mydraw();
+}
+
+function btnPageDown() {
+    pag++;
+    if (pag >= dimPagine) pag = 0;
+    Mydraw();
+}
+
 
 function keyTyped() 
 {
