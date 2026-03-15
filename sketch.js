@@ -838,10 +838,13 @@ function evidenziaRiga(index) {
       if (row) row.classList.add("highlight");
     }
 }
-
   
-function mouseMoved() 
-{ 
+function mouseMoved(x, y) 
+{
+    // Se non arrivano parametri (desktop), usa mouseX/mouseY
+    x = (x !== undefined) ? x : mouseX;
+    y = (y !== undefined) ? y : mouseY; 
+    
     let id = 0;
     evidenziaRiga(null);
     
@@ -946,6 +949,25 @@ function mouseMoved()
     
     return -1;
 }
+
+function touchMoved() 
+{
+    mouseMoved(touchX, touchY);
+    return false; // evita lo scroll della pagina
+}
+
+function touchStarted() {
+    let ctx = getAudioContext();
+    if (ctx.state !== "running") {
+        ctx.resume().then(() => {
+            if (!audioInitialized) {
+                initAudio();
+                audioInitialized = true;
+            }
+        });
+    }
+}
+
 
 function boxHasBlack(x, y, w, h)
 {
