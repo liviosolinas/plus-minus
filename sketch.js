@@ -45,6 +45,8 @@ let NUM = 2;
 let tboxes = new Array(NUM); 
 let i_txt; 
 let btn_scheda; 
+let loadingDiv;
+
 //Minim minim;
 //AudioSample[] audioFiles;
 //AudioPlayer[] audioFiles;
@@ -125,6 +127,10 @@ function setup()
     rectMode(CORNER);
     textAlign(LEFT);
     strokeWeight(1.5);
+
+    loadingDiv = createDiv("Loading audio...");
+    loadingDiv.style("font-size", "20px");
+    loadingDiv.style("color", "red");
     
     instantiateTextBox();
     //eliminazine dell'impostazione della scheda
@@ -454,6 +460,10 @@ function initAudio() {
 
 function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
+    if (loadingDiv) {
+        loadingDiv.html("Caricamento file audio...");
+        setTimeout(() => loadingDiv.remove(), 1000);
+    }
 
     for (let i = 0; i < TOTAL_FILES; i++) {
         channels[i] = new AudioChannel(audioFiles[i]);
@@ -466,6 +476,11 @@ function onAllAudioLoaded() {
 
     audioReady = true;
     console.log("🎉 Audio pronto!");
+
+    if (loadingDiv) {
+        loadingDiv.html("Audio pronto!");
+        setTimeout(() => loadingDiv.remove(), 1000);
+    }
 }
 
 function btnPlay() {
