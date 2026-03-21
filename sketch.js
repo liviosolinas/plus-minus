@@ -1170,7 +1170,8 @@ function stop()
 } 
 
 
-function setupMusic() {
+function setupMusic() 
+{
     let ctx = getAudioContext();
 
     // MASTER
@@ -1229,30 +1230,7 @@ function setupMusic() {
     });
 }
 
-  // 🔬 Granular synthesis: GraniSoft
-  loadSound('data/GraniSoft.mp3', (sound) => {
-    const buffer = sound.buffer;
-    gspSoft = new GranularSamplePlayer(audiocontext, buffer);
-
-    randomnessGraniSoft = new Glide(audiocontext, k_randomnessGraniSoft, 100);
-    intervalGraniSoft = new Glide(audiocontext, k_intervalGraniSoft, 10);
-    grainSizeGraniSoft = new Glide(audiocontext, k_grainSizeGraniSoft, 10);
-    positionGraniSoft = new Glide(audiocontext, k_positionGraniSoft, 30);
-    pitchGraniSoft = new Glide(audiocontext, 1, 20);
-
-    gspSoft.setRandomness(randomnessGraniSoft);
-    gspSoft.setGrainInterval(intervalGraniSoft);
-    gspSoft.setGrainSize(grainSizeGraniSoft);
-    gspSoft.setPosition(positionGraniSoft);
-    gspSoft.setPitch(pitchGraniSoft);
-
-    gainGraniSoft = getAudioContext().createGain();
-    gainGraniSoft.gain.value = 0.5;
-    gspSoft.connect(gainGraniSoft);
-    gainGraniSoft.connect(masterGain); //masterGainWeb
-  });
-}
-
+  
 function setupGrain(sound, type) 
 {
     let gainNode = getAudioContext().createGain();
