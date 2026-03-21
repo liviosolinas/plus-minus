@@ -483,15 +483,6 @@ class Evento {
 
     Play(tempo, aCentralSound, aSecondaryNotes, eventoPrec, isLayer, timbro) 
     {
-        //    SecondaryNote   secondaryNote;
-        //    int             flagCentralSound;
-        //    int             flagAccident;
-        //    t_Articulation  articulation;
-        //    t_Durations     durations;
-        //    t_Hairpins      hairpin;
-        //    int             hairpinValue;
-        //    t_Layer         layer;
-        //    t_Coordination  coordination;
         let inizioCS = 0.0;
         let fineCS = 0.0;
         let ds = 0.5;
@@ -499,21 +490,25 @@ class Evento {
         let da = 0.5;
         let as = 0.05;
         let ap = 0.5;
-        let aa = 0.05; //out.setTempo( bpm );
+        let aa = 0.05;
+    
+        // Gestione livello generale
         if (this.centralSound.timbroCS == t_Timbre.Hard ||
-            this.centralSound.timbroNoise == t_Timbre.Hard ) 
+            this.centralSound.timbroNoise == t_Timbre.Hard) 
         {
             masterGain.amp(1.0);
         } 
         else if (this.centralSound.timbroCS == t_Timbre.Soft ||
-            this.centralSound.timbroNoise == t_Timbre.Soft ) 
+                 this.centralSound.timbroNoise == t_Timbre.Soft) 
         {
             masterGain.amp(0.1);
         } 
         else 
         {
             masterGain.amp(0.5);
-        } //esecuzione delle note secondarie prima del suono centrale
+        }
+    
+        // Note secondarie PRIMA del suono centrale
         if (this.secondaryNote.quando == t_SecNoteWhen.Before) 
         {
             inizioCS = this.playSecondaryNotes(
@@ -528,187 +523,169 @@ class Evento {
                 aa,
                 timbro
             );
-        } //caricamento info per la trasposizione
+        }
+    
+        // Calcolo trasposizione in base all'evento precedente
         let traspose = 0;
         if (eventoPrec != null && eventoPrec.isValido) 
         {
-            //console.log('this.centralSound.tipoEvento=' + this.centralSound.tipoEvento);
             let noteCS = aCentralSound[this.centralSound.tipoEvento];
             let notaTrasp = null;
+    
             if (this.getHairpin() == t_Hairpins.Cresc) 
             {
-                //Crescente
                 if (this.hairpinValue < noteCS.length) 
                 {
                     notaTrasp = noteCS[this.hairpinValue];
-                    traspose =
-                        notaTrasp.altezza - noteCS[0].altezza;
-                } else {
-                    //notaTrasp = noteCS[noteCS.length - 1];
+                    traspose = notaTrasp.altezza - noteCS[0].altezza;
+                } 
+                else 
+                {
                     traspose =
                         (noteCS[noteCS.length - 1].altezza -
-                            noteCS[0].altezza) * this.hairpinValue;
+                         noteCS[0].altezza) * this.hairpinValue;
                 }
             } 
             else if (this.getHairpin() == t_Hairpins.Decr) 
             {
-                //Decrescente
                 if (this.hairpinValue < noteCS.length) 
                 {
                     notaTrasp = noteCS[this.hairpinValue];
-                    traspose =
-                        notaTrasp.altezza -
-                        noteCS[0].altezza;
-                } else {
-                    //notaTrasp = noteCS[hairpinValue];
+                    traspose = notaTrasp.altezza - noteCS[0].altezza;
+                } 
+                else 
+                {
                     traspose =
                         (noteCS[noteCS.length - 1].altezza -
-                            noteCS[0].altezza) *
+                         noteCS[0].altezza) *
                         this.hairpinValue;
                 }
                 traspose = -traspose;
             }
         }
+    
+        // 🔊 GESTIONE GRANULARI (parte delicata)
         if (!isLayer) 
         {
-            // Prima ferma tutto
-            gspHard.stop();
-            gspSoft.stop();
-        
-            // Poi scegli cosa attivare
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) 
+            // Se i granulari non sono ancora pronti, non fare nulla
+            if (gspHard && gspSoft) 
             {
-                randomnessGraniHard.setValue(
-                    random(k_randomnessGraniHard - s_randomnessGraniHard,
-                           k_randomnessGraniHard + s_randomnessGraniHard)
-                );
-                pitchGraniHard.setValue(random(1.0 - pitchRange, 1.0 + pitchRange));
-                grainSizeGraniHard.setValue(
-                    random(k_grainSizeGraniHard - s_grainSizeGraniHard,
-                           k_grainSizeGraniHard + s_grainSizeGraniHard)
-                );
-                intervalGraniHard.setValue(
-                    random(k_intervalGraniHard - s_intervalGraniHard,
-                           k_intervalGraniHard + s_intervalGraniHard)
-                );
-        
-                gspHard.start();
-            }
-            else if (this.centralSound.timbroNoise == t_Timbre.Soft) 
-            {
-                randomnessGraniSoft.setValue(
-                    random(k_randomnessGraniSoft - s_randomnessGraniSoft,
-                           k_randomnessGraniSoft + s_randomnessGraniSoft)
-                );
-                pitchGraniSoft.setValue(random(1.0 - pitchRange, 1.0 + pitchRange));
-                grainSizeGraniSoft.setValue(
-                    random(k_grainSizeGraniSoft - s_grainSizeGraniSoft,
-                           k_grainSizeGraniSoft + s_grainSizeGraniSoft)
-                );
-                intervalGraniSoft.setValue(
-                    random(k_intervalGraniSoft - s_intervalGraniSoft,
-                           k_intervalGraniSoft + s_intervalGraniSoft)
-                );
-        
-                gspSoft.start();
+                // Ferma sempre tutto prima
+                gspHard.stop();
+                gspSoft.stop();
+    
+                if (this.centralSound.timbroNoise == t_Timbre.Hard) 
+                {
+                    randomnessGraniHard.setValue(
+                        random(
+                            k_randomnessGraniHard - s_randomnessGraniHard,
+                            k_randomnessGraniHard + s_randomnessGraniHard
+                        )
+                    );
+                    pitchGraniHard.setValue(
+                        random(1.0 - pitchRange, 1.0 + pitchRange)
+                    );
+                    grainSizeGraniHard.setValue(
+                        random(
+                            k_grainSizeGraniHard - s_grainSizeGraniHard,
+                            k_grainSizeGraniHard + s_grainSizeGraniHard
+                        )
+                    );
+                    intervalGraniHard.setValue(
+                        random(
+                            k_intervalGraniHard - s_intervalGraniHard,
+                            k_intervalGraniHard + s_intervalGraniHard
+                        )
+                    );
+    
+                    gspHard.start();
+                }
+                else if (this.centralSound.timbroNoise == t_Timbre.Soft) 
+                {
+                    randomnessGraniSoft.setValue(
+                        random(
+                            k_randomnessGraniSoft - s_randomnessGraniSoft,
+                            k_randomnessGraniSoft + s_randomnessGraniSoft
+                        )
+                    );
+                    pitchGraniSoft.setValue(
+                        random(1.0 - pitchRange, 1.0 + pitchRange)
+                    );
+                    grainSizeGraniSoft.setValue(
+                        random(
+                            k_grainSizeGraniSoft - s_grainSizeGraniSoft,
+                            k_grainSizeGraniSoft + s_grainSizeGraniSoft
+                        )
+                    );
+                    intervalGraniSoft.setValue(
+                        random(
+                            k_intervalGraniSoft - s_intervalGraniSoft,
+                            k_intervalGraniSoft + s_intervalGraniSoft
+                        )
+                    );
+    
+                    gspSoft.start();
+                }
+                else 
+                {
+                    // Nessun timbro Noise: granulari fermi
+                    gspHard.stop();
+                    gspSoft.stop();
+                }
             }
         }
-
-        
-        //esecuzione del suono centrale
+    
+        // Suono centrale
         fineCS = this.playCentralSound(
             aCentralSound,
             this.centralSound.tipoEvento,
             inizioCS,
             traspose,
             timbro
-        ); 
-        
-        //if ( centralSound.timbroNoise == t_Timbre.Hard )
-        //{
-        //  if (isDebug) print( " timbroNoise=pause " + centralSound.timbroNoise );
-        //  gsp.pause(true);
-        //}
-        //if ( centralSound.timbroNoise == t_Timbre.Soft )
-        //{
-        //  if (isDebug) print( " timbroNoise=pause " + centralSound.timbroNoise );
-        //  gsp.pause(true);
-        //}
+        );
+    
+        // (blocchi sui tipi di evento lasciati invariati)
         if (this.centralSound.tipoEvento == t_Event.A_Z) {
-            //prima Accident e poi CentralSound
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.AZ) {
-            //Accident insieme al CentralSound
-            {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.Z_A) {
-            //prima CentralSound e poi Accident
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.A_Z_A) {
-            //prima Accident, poi CentralSound, poi Accident
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.AZ_A) {
-            //Accident insieme al CentralSound, poi Accident
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.A_AZ) {
-            //prima Accident poi Accident insieme al CentralSound
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
         }
         if (this.centralSound.tipoEvento == t_Event.A_AZ_A) {
-            //prima Accident poi Accident insieme al CentralSound, poi Accident
-            if (this.centralSound.timbroCS == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroCS == t_Timbre.Soft) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Hard) {
-            }
-            if (this.centralSound.timbroNoise == t_Timbre.Soft) {
-            }
-        } 
-        
-        //esecuzione delle note secondarie insieme del suono centrale
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+    
+        // Note secondarie DURANTE il suono centrale
         if (this.secondaryNote.quando == t_SecNoteWhen.During) {
             this.playSecondaryNotes(
                 aSecondaryNotes,
@@ -722,7 +699,9 @@ class Evento {
                 aa,
                 timbro
             );
-        } //esecuzione delle note secondarie dopo il suono centrale
+        }
+    
+        // Note secondarie DOPO il suono centrale
         if (this.secondaryNote.quando == t_SecNoteWhen.After) {
             this.playSecondaryNotes(
                 aSecondaryNotes,
@@ -737,28 +716,20 @@ class Evento {
                 timbro
             );
         }
+    
+        // Durate (rest lasciati commentati come nel tuo codice)
         if (this.durations == t_Durations.Long) {
-            //delay(RestLong);
         } else if (this.durations == t_Durations.Medium) {
-            //delay(RestMedium);
         } else if (this.durations == t_Durations.Short) {
-            //delay(RestShort);
         } else if (this.durations == t_Durations.No) {
-            //delay(RestNo);
         } else if (this.durations == t_Durations.LastsUntilMiddle) {
-            //dura fino a circa la metà del seguente evento
-            //delay(RestNo);
         } else if (this.durations == t_Durations.LastsUntilEnd) {
-            //dura fino alla fine del seguente evento
-            //delay(RestNo);
         } else if (this.durations == t_Durations.LastsAsLong) {
-            //dura il piu' possibile ma deve fermarsi alla prossima pausa
-            //delay(RestNo);
         }
+    
         return fineCS;
     }
-
-
+    
     Draw(pag, evento) 
     {
         let spiaz = 0;
