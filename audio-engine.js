@@ -59,7 +59,7 @@ class Voice {
 }
 
 class AudioChannel {
-    constructor(buffer, masterGain, voices = 16) {
+    constructor(buffer, masterGain, voices = 64) {
         this.voices = [];
         const ctx = getAudioContext();
 
