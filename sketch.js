@@ -128,9 +128,30 @@ function setup()
     textAlign(LEFT);
     strokeWeight(1.5);
 
-    loadingDiv = createDiv("Loading audio...");
+    loadingDiv = createDiv();
+    loadingDiv.id("loading-overlay");
+    loadingDiv.style("position", "fixed");
+    loadingDiv.style("top", "0");
+    loadingDiv.style("left", "0");
+    loadingDiv.style("width", "100%");
+    loadingDiv.style("height", "100%");
+    loadingDiv.style("background", "rgba(0,0,0,0.6)");
+    loadingDiv.style("display", "flex");
+    loadingDiv.style("align-items", "center");
+    loadingDiv.style("justify-content", "center");
+    loadingDiv.style("z-index", "9999");
+    loadingDiv.style("color", "white");
     loadingDiv.style("font-size", "20px");
-    loadingDiv.style("color", "red");
+    loadingDiv.html(`
+        <div style="text-align:center; width:60%;">
+            <div id="loading-text" style="margin-bottom:10px;">
+                Caricamento audio...
+            </div>
+            <div style="width:100%; height:20px; background:#444; border-radius:10px; overflow:hidden;">
+                <div id="loading-bar" style="width:0%; height:100%; background:#4caf50;"></div>
+            </div>
+        </div>
+    `);
     
     instantiateTextBox();
     //eliminazine dell'impostazione della scheda
@@ -449,20 +470,22 @@ function initAudio() {
 async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
 
-    if (loadingDiv) {
-        loadingDiv.html("Caricamento file audio...");
-        loadingDiv.show();
-    }
-
     const ctx = getAudioContext();
     masterGain = ctx.createGain();
     masterGain.gain.value = 1.0;
     masterGain.connect(ctx.destination);
 
+    const barEl  = document.getElementById("loading-bar");
+    const textEl = document.getElementById("loading-text");
+
     for (let i = 0; i < TOTAL_FILES; i++) {
-        console.log("onAllAudioLoaded() => audioFiles[i]=" + audioFiles[i]);
         const buffer = await loadSample(audioFiles[i]);
-        channels[i] = new AudioChannel(buffer, masterGain);
+        channels[i] = new AudioChannel(buffer, masterGain, 32);
+
+        // aggiorna percentuale
+        const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
+        if (barEl)  barEl.style.width = perc + "%";
+        if (textEl) textEl.innerText = `Caricamento audio... ${perc}%`;
     }
 
     eventoPrec = new Evento();
@@ -471,10 +494,11 @@ async function onAllAudioLoaded() {
     audioReady = true;
     console.log("🎉 Audio pronto!");
 
-    if (loadingDiv) {
-        loadingDiv.html("Audio pronto!");
-        setTimeout(() => loadingDiv.hide(), 800);
-    }
+    if (textEl) textEl.innerText = "Audio pronto!";
+
+    setTimeout(() => {
+        if (loadingDiv) loadingDiv.hide();
+    }, 800);
 }
 
 
