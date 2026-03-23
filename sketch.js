@@ -1195,10 +1195,10 @@ function setupMusic()
 {
     let ctx = getAudioContext();
 
-    // MASTER
-    masterGain = new p5.Gain();
-    masterGain.amp(1);
-    masterGain.connect();
+    // MASTER (WebAudio)
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(ctx.destination);
 
     // --- HARD ---
     loadSound('data/GraniHard.mp3', (sound) => {
@@ -1222,7 +1222,7 @@ function setupMusic()
         gainGraniHard.gain.value = 0.5;
 
         gspHard.connect(gainGraniHard);
-        gainGraniHard.connect(masterGain.input);
+        gainGraniHard.connect(masterGain);
     });
 
     // --- SOFT ---
@@ -1247,11 +1247,11 @@ function setupMusic()
         gainGraniSoft.gain.value = 0.5;
 
         gspSoft.connect(gainGraniSoft);
-        gainGraniSoft.connect(masterGain.input);
+        gainGraniSoft.connect(masterGain);
     });
 }
 
-  
+
 function setupGrain(sound, type) 
 {
     let gainNode = getAudioContext().createGain();
