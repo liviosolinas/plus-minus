@@ -1,3 +1,25 @@
+class ArrayList extends Array {
+    constructor() 
+    { 
+        super(...[]); 
+    }
+    size() { return this.length; }
+    add(x) { this.push(x); }
+    get(i) { return this[i]; }
+    set(i, x) 
+    {
+        if (i >= 0 && i < this.length) 
+        {
+            this[i] = x;
+        } 
+        else 
+        {
+            throw new RangeError(`Indice ${i} fuori dai limiti (0-${this.length - 1})`);
+        }
+    }
+    remove(i) { this.splice(i, 1); }
+}
+
 let audioCtx;
 
 //// [processing-p5-convert] import processing.sound.*;
@@ -81,28 +103,6 @@ let alFlags = new ArrayList();
 let noteToPlay = new ArrayList(); 
 let eventoPrec; 
 let pickGR1;
-
-class ArrayList extends Array {
-    constructor() 
-    { 
-        super(...[]); 
-    }
-    size() { return this.length; }
-    add(x) { this.push(x); }
-    get(i) { return this[i]; }
-    set(i, x) 
-    {
-        if (i >= 0 && i < this.length) 
-        {
-            this[i] = x;
-        } 
-        else 
-        {
-            throw new RangeError(`Indice ${i} fuori dai limiti (0-${this.length - 1})`);
-        }
-    }
-    remove(i) { this.splice(i, 1); }
-}
 
 
 function delay(ms) 
