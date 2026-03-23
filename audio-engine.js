@@ -49,7 +49,7 @@ class Voice {
 
         if(isDebug)
         {
-            console.log("VOICE MASTERGAIN:", masterGain);
+            //console.log("VOICE MASTERGAIN:", masterGain);
         }
         this.busy = false;
     }
@@ -108,7 +108,7 @@ class AudioChannel {
 
         if(isDebug)
         {
-            console.log("CHANNEL MASTERGAIN:", masterGain);
+            //console.log("CHANNEL MASTERGAIN:", masterGain);
         }
         for (let i = 0; i < voices; i++) {
             this.voices.push(new Voice(ctx, buffer, masterGain));
