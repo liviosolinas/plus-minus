@@ -97,7 +97,7 @@ class AudioChannel {
         this.voices = [];
         const ctx = getAudioContext();
 
-        console.log("AudioChannel usa masterGain:", masterGain);
+        //console.log("AudioChannel usa masterGain:", masterGain);
 
         for (let i = 0; i < voices; i++) {
             this.voices.push(new Voice(ctx, buffer, masterGain));
