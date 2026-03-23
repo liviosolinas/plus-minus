@@ -81,8 +81,56 @@ function playNote(tempo, duration, nota, volume, timbro, articulation)
         }
     }
 } 
-
 function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articulation) 
+{
+    tempo = Math.round(tempo * 100) / 100;
+
+    if (!channels[notaIndex]) {
+        console.log("\tPROBLEM: channels[" + notaIndex + "] null");
+        return;
+    }
+
+    const channel = channels[notaIndex];
+
+    // --- TIMBRO → filtro + volume ---
+    let filterFreq = 1000;
+
+    if (timbro === t_Timbre.Hard) {
+        filterFreq = 20000;
+        volume = volume / 1.0;
+    } 
+    else if (timbro === t_Timbre.Soft) {
+        filterFreq = 200;
+        volume = volume / 2.5;
+    } 
+    else {
+        filterFreq = 1000;
+        volume = volume / 1.5;
+    }
+
+    volume = Math.round(volume * 100) / 100;
+    console.log("\tvolume:", volume);
+
+    // --- ARTICOLAZIONE (per ora ignorata, da integreremo dopo) ---
+    let reverbAmount = 0;
+    if (articulation === t_Articulation.AccentAndReverberation) {
+        reverbAmount = 0.5;
+    } 
+    else if (articulation === t_Articulation.K) {
+        reverbAmount = 0.2;
+    }
+    console.log("\treverber:", reverbAmount);
+
+    // --- PITCH (per ora fisso, poi lo calcoliamo da MIDI) ---
+    const pitch = 1.0;
+
+    // --- SUONA LA NOTA CON IL NUOVO MOTORE AUDIO ---
+    channel.play(volume, pitch, duration, filterFreq);
+
+    console.log("\tstop nota>");
+}
+
+function playNoteWithParamsOLD(tempo, duration, notaIndex, volume, timbro, articulation) 
 {
     let rate = 1;     //la velocita' di esecuzione
     let cueStart = 0; //parte da 0
