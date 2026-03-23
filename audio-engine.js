@@ -51,7 +51,12 @@ class Voice {
     }
 
     play(volume, pitch, duration, filterFreq) {
-        if (this.busy) return false;
+        if(iDebug) console.log("🎧 Voice.play()", { volume, pitch, duration, filterFreq });
+
+        if (this.busy) {
+            console.log("⚠️ Voice occupata, salto");
+            return false;
+        }
 
         this.busy = true;
 
@@ -65,15 +70,16 @@ class Voice {
 
         this.filter.frequency.setValueAtTime(filterFreq, now);
 
-        this.gain.gain.setValueAtTime(0, now);
-        this.gain.gain.linearRampToValueAtTime(volume, now + 0.01);
-        this.gain.gain.linearRampToValueAtTime(0, now + duration);
+        // 🔊 per prova: niente envelope complicata, volume fisso
+        this.gain.gain.cancelScheduledValues(now);
+        this.gain.gain.setValueAtTime(volume, now);
 
         src.start(now);
         src.stop(now + duration);
 
         src.onended = () => {
             this.busy = false;
+            if(iDebug) console.log("✅ Voice.onended");
         };
 
         return true;
