@@ -1244,14 +1244,9 @@ function stop()
 async function setupMusic() {
     let ctx = getAudioContext();
 
-    // MASTER
-    masterGain = ctx.createGain();
-    masterGain.gain.value = 1.0;
-    masterGain.connect(ctx.destination);
-
     // --- HARD ---
     const bufferHard = await loadSample('data/GraniHard.mp3');
-    gspHard = new GranularSamplePlayer(ctx, bufferHard);
+    gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain);
 
     randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
     intervalGraniHard   = new Glide(ctx, k_intervalGraniHard, 10);
@@ -1259,20 +1254,13 @@ async function setupMusic() {
     positionGraniHard   = new Glide(ctx, k_positionGraniHard, 30);
     pitchGraniHard      = new Glide(ctx, 1, 20);
 
-    gspHard.setRandomness(randomnessGraniHard);
-    gspHard.setGrainInterval(intervalGraniHard);
-    gspHard.setGrainSize(grainSizeGraniHard);
-    gspHard.setPosition(positionGraniHard);
-    gspHard.setPitch(pitchGraniHard);
-
-    gainGraniHard = ctx.createGain();
-    gainGraniHard.gain.value = 0.5;
-    gspHard.connect(gainGraniHard);
-    gainGraniHard.connect(masterGain);
+    gspHard.setRandomness(randomnessGraniHard.value);
+    gspHard.setGrainSize(grainSizeGraniHard.value);
+    gspHard.setPitch(pitchGraniHard.value);
 
     // --- SOFT ---
     const bufferSoft = await loadSample('data/GraniSoft.mp3');
-    gspSoft = new GranularSamplePlayer(ctx, bufferSoft);
+    gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain);
 
     randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
     intervalGraniSoft   = new Glide(ctx, k_intervalGraniSoft, 10);
@@ -1280,21 +1268,17 @@ async function setupMusic() {
     positionGraniSoft   = new Glide(ctx, k_positionGraniSoft, 30);
     pitchGraniSoft      = new Glide(ctx, 1, 20);
 
-    gspSoft.setRandomness(randomnessGraniSoft);
-    gspSoft.setGrainInterval(intervalGraniSoft);
-    gspSoft.setGrainSize(grainSizeGraniSoft);
-    gspSoft.setPosition(positionGraniSoft);
-    gspSoft.setPitch(pitchGraniSoft);
-
-    gainGraniSoft = ctx.createGain();
-    gainGraniSoft.gain.value = 0.5;
-    gspSoft.connect(gainGraniSoft);
-    gainGraniSoft.connect(masterGain);
+    gspSoft.setRandomness(randomnessGraniSoft.value);
+    gspSoft.setGrainSize(grainSizeGraniSoft.value);
+    gspSoft.setPitch(pitchGraniSoft.value);
 }
 
 
 function setupGrain(sound, type) 
 {
+    console.log("======================= WARNING: setupGrain() =======================");
+    return;
+    
     let gainNode = getAudioContext().createGain();
     gainNode.gain.value = type === "hard" ? 0.5 : 0.2;
     gainNode.connect(masterGain);
