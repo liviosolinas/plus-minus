@@ -493,20 +493,23 @@ class Evento {
         let aa = 0.05;
     
         // Gestione livello generale
+        const ctx = getAudioContext();
+        
         if (this.centralSound.timbroCS == t_Timbre.Hard ||
             this.centralSound.timbroNoise == t_Timbre.Hard) 
         {
-            masterGain.amp(1.0);
+            masterGain.gain.setValueAtTime(1.0, ctx.currentTime);
         } 
         else if (this.centralSound.timbroCS == t_Timbre.Soft ||
                  this.centralSound.timbroNoise == t_Timbre.Soft) 
         {
-            masterGain.amp(0.1);
+            masterGain.gain.setValueAtTime(0.1, ctx.currentTime);
         } 
         else 
         {
-            masterGain.amp(0.5);
+            masterGain.gain.setValueAtTime(0.5, ctx.currentTime);
         }
+        
     
         // Note secondarie PRIMA del suono centrale
         if (this.secondaryNote.quando == t_SecNoteWhen.Before) 
