@@ -93,19 +93,19 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
     const channel = channels[notaIndex];
 
     // --- TIMBRO → filtro + volume ---
-    let filterFreq = 1000;
+    let filterFreq = 2000; // più aperto
 
     if (timbro === t_Timbre.Hard) {
         filterFreq = 20000;
-        volume = volume / 1.0;
+        volume = volume * 1.0;
     } 
     else if (timbro === t_Timbre.Soft) {
-        filterFreq = 200;
-        volume = volume / 2.5;
+        filterFreq = 2000;
+        volume = volume * 0.6; 
     } 
     else {
-        filterFreq = 1000;
-        volume = volume / 1.5;
+        filterFreq = 5000;
+        volume = volume * 0.9;
     }
 
     volume = Math.round(volume * 100) / 100;
