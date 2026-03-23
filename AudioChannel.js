@@ -1,4 +1,4 @@
-class AudioChannel 
+class AudioChannel_OLD 
 {
   constructor(soundFile, impulseResponseBuffer) 
   {
