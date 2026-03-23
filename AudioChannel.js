@@ -146,105 +146,22 @@ class AudioChannel
     }
 }
 */ 
-
-class GranularSamplePlayer 
-{
-    constructor(audioContext, audioBuffer) {
-      this.context = audioContext;
-      this.buffer = audioBuffer;
-  
-      // Parametri granulazione
-      this.grainInterval = 0.1; // in secondi
-      this.grainSize = 0.2;     // in secondi
-      this.position = 0.0;      // in secondi
-      this.pitch = 1.0;         // playbackRate
-      this.randomness = 0.0;    // variazione casuale
-  
-      this.output = getAudioContext().createGain();
-      this.isPlaying = false;
-    }
-  
-    connect(destination) {
-      this.output.connect(destination);
-    }
-  
-    setGrainInterval(glide) {
-      this.grainInterval = glide.getValue();
-    }
-  
-    setGrainSize(glide) {
-      this.grainSize = glide.getValue();
-    }
-  
-    setPosition(glide) {
-      this.position = glide.getValue();
-    }
-  
-    setPitch(glide) {
-      this.pitch = glide.getValue();
-    }
-  
-    setRandomness(glide) {
-      this.randomness = glide.getValue();
-    }
-  
-    start() {
-      if (this.isPlaying) return;
-      this.isPlaying = true;
-      this.scheduleGrains();
-    }
-  
-    stop() {
-      this.isPlaying = false;
-    }
-  
-    scheduleGrains() {
-      const schedule = () => {
-        if (!this.isPlaying) return;
-  
-        const source = this.context.createBufferSource();
-        source.buffer = this.buffer;
-  
-        const grainPos = this.position + (Math.random() - 0.5) * this.randomness;
-        const startTime = Math.max(0, grainPos);
-        const duration = this.grainSize;
-  
-        source.playbackRate.value = this.pitch;
-        source.connect(this.output);
-        source.start(this.context.currentTime, startTime, duration);
-  
-        setTimeout(schedule, this.grainInterval * 1000);
-      };
-  
-      schedule();
-    }
-}
   
 
-class Glide 
-{
+class Glide {
     constructor(context, initialValue, timeConstant = 100) {
-      this.context = context;
-      this.value = initialValue;
-      this.targetValue = initialValue;
-      this.timeConstant = timeConstant;
+        this.context = context;
+        this.value = initialValue;
+        this.targetValue = initialValue;
+        this.timeConstant = timeConstant;
     }
-  
-    getValue() {
-      return this.value;
-    }
-  
+
     setValue(targetValue) {
-      this.targetValue = targetValue;
-      const now = this.context.currentTime;
-      // Simula interpolazione esponenziale
-      this.value += (targetValue - this.value) / this.timeConstant;
+        this.targetValue = targetValue;
     }
-  
+
     update() {
-      // Puoi chiamare questo in un loop per aggiornare gradualmente
-      this.setValue(this.targetValue);
+        this.value += (this.targetValue - this.value) / this.timeConstant;
     }
-    
 }
   
