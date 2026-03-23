@@ -1,5 +1,5 @@
-let audioCtx;
-
+let audioCtx = null;
+let masterGain  = null; //, masterGainWeb; 
 
 //// [processing-p5-convert] import processing.sound.*;
 // [processing-p5-convert] import ddf.minim.*;
@@ -58,7 +58,6 @@ let reverbGain;
 let gainEnvelope; 
 
 //let audiocontext; //usare getAudioContext()   //Processing>beads
-let masterGain , masterGainWeb; 
 let sampleGraniHard, sampleGraniSoft; 
 let randomnessGraniHard, intervalGraniHard, grainSizeGraniHard, positionGraniHard, pitchGraniHard; 
 let pitchRange = 10.0; 
