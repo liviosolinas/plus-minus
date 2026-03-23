@@ -1,25 +1,4 @@
-
-class ArrayList extends Array {
-    constructor() 
-    { 
-        super(...[]); 
-    }
-    size() { return this.length; }
-    add(x) { this.push(x); }
-    get(i) { return this[i]; }
-    set(i, x) 
-    {
-        if (i >= 0 && i < this.length) 
-        {
-            this[i] = x;
-        } 
-        else 
-        {
-            throw new RangeError(`Indice ${i} fuori dai limiti (0-${this.length - 1})`);
-        }
-    }
-    remove(i) { this.splice(i, 1); }
-}
+let audioCtx;
 
 //// [processing-p5-convert] import processing.sound.*;
 // [processing-p5-convert] import ddf.minim.*;
@@ -50,7 +29,6 @@ let loadingDiv;
 //Minim minim;
 //AudioSample[] audioFiles;
 //AudioPlayer[] audioFiles;
-let audioCtx;
 let gspHard, gspSoft; 
 let gainGraniHard, gainGraniSoft; 
 let gainMaster; 
@@ -103,6 +81,29 @@ let alFlags = new ArrayList();
 let noteToPlay = new ArrayList(); 
 let eventoPrec; 
 let pickGR1;
+
+class ArrayList extends Array {
+    constructor() 
+    { 
+        super(...[]); 
+    }
+    size() { return this.length; }
+    add(x) { this.push(x); }
+    get(i) { return this[i]; }
+    set(i, x) 
+    {
+        if (i >= 0 && i < this.length) 
+        {
+            this[i] = x;
+        } 
+        else 
+        {
+            throw new RangeError(`Indice ${i} fuori dai limiti (0-${this.length - 1})`);
+        }
+    }
+    remove(i) { this.splice(i, 1); }
+}
+
 
 function delay(ms) 
 {
@@ -449,34 +450,50 @@ function Mydraw()
     //noLoop(); 
 }
 
-function initAudio() {
+async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
+    // 1. Ottieni SEMPRE lo stesso AudioContext
     const ctx = getAudioContext();
 
-    // CREA IL MASTER GAIN UNA SOLA VOLTA
+    // 2. Assicurati che il contesto sia attivo
+    if (ctx.state === "suspended") {
+        console.log("⏳ AudioContext sospeso, provo a riprendere...");
+        await ctx.resume();
+        console.log("▶️ AudioContext stato:", ctx.state);
+    }
+
+    // 3. Crea il masterGain SOLO se non esiste già
     if (!masterGain) {
+        console.log("🎚️ Creo il masterGain globale");
+
         masterGain = ctx.createGain();
         masterGain.gain.value = 1.0;
+
+        // Collegalo al destination del contesto attivo
         masterGain.connect(ctx.destination);
 
-        if(isDebug)
-        {
-            console.log("MASTERGAIN GLOBAL:", masterGain);
-            console.log("MASTERGAIN FIXED:", masterGain.gain.value);
-            console.log("MASTERGAIN CONNECTED TO:", masterGain.context.destination);
+        if (isDebug) {
+            console.log("MASTERGAIN:", masterGain);
+            console.log("MASTERGAIN CONTEXT:", masterGain.context);
+            console.log("DESTINATION:", ctx.destination);
         }
+    } else {
+        console.log("⚠️ masterGain esiste già, NON lo ricreo");
     }
+
+    // 4. Flag di stato
     audioInitialized = true;
     audioReady = false;
     filesLoaded = 0;
 
-    // registra gli URL
+    // 5. Registra gli URL dei file audio
     for (let i = 0; i < TOTAL_FILES; i++) {
         audioFiles[i] = 'data/sound' + i + '.mp3';
         filesLoaded++;
     }
-    
+
+    // 6. Avvia il caricamento
     onAllAudioLoaded();
 }
 
