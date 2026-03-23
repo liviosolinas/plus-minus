@@ -493,6 +493,19 @@ async function onAllAudioLoaded() {
 
     audioReady = true;
     console.log("🎉 Audio pronto!");
+    console.log("🎹 TEST: provo a suonare una nota di test...");
+
+    if(isDebug) {
+        const testIndex = 60; // scegli un indice che sai che contiene una nota chiara
+        const testChannel = channels[testIndex];
+        
+        if (testChannel) {
+            testChannel.play(0.8, 1.0, 2.0, 5000); // volume alto, 2 secondi, filtro aperto
+            console.log("▶ TestChannel.play chiamato su", audioFiles[testIndex]);
+        } else {
+            console.warn("❌ Nessun canale per indice", testIndex);
+        }
+    }
 
     if (textEl) textEl.innerText = "Audio pronto!";
 
