@@ -464,6 +464,7 @@ function initAudio() {
 
     console.log("🎉 Tutti gli URL audio registrati!");
     onAllAudioLoaded();
+    audioInitialized = true;
 }
 
 
@@ -524,8 +525,7 @@ function btnPlay() {
         ctx.resume().then(() => {
             console.log("AudioContext attivato da Play");
             if (!audioInitialized) {
-                initAudio();
-                audioInitialized = true;
+                initAudio();                
             }
         });
         return;
@@ -535,7 +535,7 @@ function btnPlay() {
     if (!audioInitialized) {
         console.log("🔧 Inizializzo audio al primo click");
         initAudio();
-        audioInitialized = true;
+        
         return;
     }
 
@@ -905,8 +905,7 @@ function mousePressed()
         {
             console.log("✅ AudioContext attivato");
             if (!audioInitialized) {
-                initAudio();   // <-- QUI parte tutto l’audio
-                audioInitialized = true;
+                initAudio();               
             }
         });
     }
@@ -1109,7 +1108,6 @@ function touchStarted() {
             console.log("AudioContext attivato da touch");
             if (!audioInitialized) {
                 initAudio();
-                audioInitialized = true;
             }
         });
     }
