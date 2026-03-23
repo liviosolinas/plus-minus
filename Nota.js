@@ -90,6 +90,7 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
         console.log("\tPROBLEM: channels[" + notaIndex + "] null");
         return;
     }
+    if(isDebug) console.log("notaIndex =", notaIndex, "→ sto suonando file:", audioFiles[notaIndex]);
 
     const channel = channels[notaIndex];
 
