@@ -1,5 +1,6 @@
-let audioCtx = null;
-let masterGain  = null; //, masterGainWeb; 
+window.audioCtx = null;
+window.masterGain = null;
+
 
 //// [processing-p5-convert] import processing.sound.*;
 // [processing-p5-convert] import ddf.minim.*;
