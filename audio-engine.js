@@ -61,6 +61,10 @@ class Voice {
 
         this.busy = true;
 
+        console.log("Voice-play() => GAIN NODE VALUE:", this.gain.gain.value);
+        console.log("Voice-play() => FILTER FREQ:", this.filter.frequency.value);
+
+
         const src = this.ctx.createBufferSource();
         src.buffer = this.buffer;
         src.playbackRate.value = pitch;
