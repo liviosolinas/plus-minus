@@ -458,17 +458,17 @@ function initAudio() {
     }
 }
 
-async function onAllAudioLoaded() 
-{
+async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
 
     if (loadingDiv) {
         loadingDiv.html("Caricamento file audio...");
-        setTimeout(() => loadingDiv.remove(), 5000);
+        setTimeout(() => loadingDiv.remove(), 1000);
     }
 
     const ctx = getAudioContext();
     masterGain = ctx.createGain();
+    masterGain.gain.value = 1.0;
     masterGain.connect(ctx.destination);
 
     for (let i = 0; i < TOTAL_FILES; i++) {
