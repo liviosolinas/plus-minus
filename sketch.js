@@ -455,8 +455,8 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    // 1. Ottieni SEMPRE lo stesso AudioContext
-    const ctx = getAudioContext();
+    // 1. Ottieni SEMPRE lo stesso AudioContext globale
+    const ctx = getAudioContext();  // questo ora restituisce window.audioCtx
 
     // 2. Assicurati che il contesto sia attivo
     if (ctx.state === "suspended") {
@@ -466,18 +466,18 @@ async function initAudio() {
     }
 
     // 3. Crea il masterGain SOLO se non esiste già
-    if (!masterGain) {
+    if (!window.masterGain) {
         console.log("🎚️ Creo il masterGain globale");
 
-        masterGain = ctx.createGain();
-        masterGain.gain.value = 1.0;
+        window.masterGain = ctx.createGain();
+        window.masterGain.gain.value = 1.0;
 
         // Collegalo al destination del contesto attivo
-        masterGain.connect(ctx.destination);
+        window.masterGain.connect(ctx.destination);
 
         if (isDebug) {
-            console.log("MASTERGAIN:", masterGain);
-            console.log("MASTERGAIN CONTEXT:", masterGain.context);
+            console.log("MASTERGAIN:", window.masterGain);
+            console.log("MASTERGAIN CONTEXT:", window.masterGain.context);
             console.log("DESTINATION:", ctx.destination);
         }
     } else {
@@ -508,7 +508,7 @@ async function onAllAudioLoaded() {
 
     for (let i = 0; i < TOTAL_FILES; i++) {
         const buffer = await loadSample(audioFiles[i]);
-        channels[i] = new AudioChannel(buffer, masterGain, 32);
+        channels[i] = new AudioChannel(buffer, window.masterGain, 32);
 
         // aggiorna percentuale
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
@@ -731,7 +731,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     let osc = new  p5.Oscillator('sine');
     osc.freq(220);
     osc.amp(1);
-    osc.connect(masterGain);
+    osc.connect(window.masterGain);
     osc.start();
 
     console.log(JSON.stringify(testSong, null, 2));
