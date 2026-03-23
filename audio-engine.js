@@ -46,7 +46,7 @@ class Voice {
 
         this.gain.connect(this.filter);
         this.filter.connect(masterGain);
-        //console.log("Voice usa masterGain:", masterGain);
+        console.log("Voice usa masterGain:", masterGain);
 
         this.busy = false;
     }
@@ -103,7 +103,7 @@ class AudioChannel {
         this.voices = [];
         const ctx = getAudioContext();
 
-        //console.log("AudioChannel usa masterGain:", masterGain);
+        console.log("AudioChannel usa masterGain:", masterGain);
 
         for (let i = 0; i < voices; i++) {
             this.voices.push(new Voice(ctx, buffer, masterGain));
