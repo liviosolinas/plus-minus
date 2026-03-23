@@ -458,17 +458,22 @@ function initAudio() {
     }
 }
 
-function onAllAudioLoaded() {
+async function onAllAudioLoaded() 
+{
     console.log("🔧 Creo i canali audio...");
+
     if (loadingDiv) {
         loadingDiv.html("Caricamento file audio...");
-        setTimeout(() => loadingDiv.remove(), 1000);
+        setTimeout(() => loadingDiv.remove(), 5000);
     }
 
+    const ctx = getAudioContext();
+    masterGain = ctx.createGain();
+    masterGain.connect(ctx.destination);
+
     for (let i = 0; i < TOTAL_FILES; i++) {
-        channels[i] = new AudioChannel(audioFiles[i]);
-        channels[i].soundFile.disconnect();
-        channels[i].soundFile.connect(masterGain);
+        const buffer = await loadSample(audioFiles[i]);
+        channels[i] = new AudioChannel(buffer, masterGain);
     }
 
     eventoPrec = new Evento();
@@ -482,6 +487,7 @@ function onAllAudioLoaded() {
         setTimeout(() => loadingDiv.remove(), 1000);
     }
 }
+
 
 function btnPlay() {
     let ctx = getAudioContext();
