@@ -212,12 +212,7 @@ function setup()
 
 function draw() 
 {
-    if (!audioReady) {
-        // Mostra solo il loadingDiv, non disegnare la partitura
-        return;
-    }
-    
-    if (isDebug) console.log("\n=====draw()======="); 
+   if (isDebug) console.log("\n=====draw()======="); 
     Mydraw();//
     noLoop(); //blocca il draw di sistema
 }
