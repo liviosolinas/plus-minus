@@ -519,6 +519,7 @@ async function onAllAudioLoaded() {
 function btnPlay() {
     let ctx = getAudioContext();
 
+    // 1. Se il contesto non è running, attivalo
     if (ctx.state !== "running") {
         ctx.resume().then(() => {
             console.log("AudioContext attivato da Play");
@@ -527,18 +528,27 @@ function btnPlay() {
                 audioInitialized = true;
             }
         });
-        return; // aspetta il prossimo click
+        return;
     }
 
+    // 2. Se l’audio non è stato inizializzato, fallo ORA
+    if (!audioInitialized) {
+        console.log("🔧 Inizializzo audio al primo click");
+        initAudio();
+        audioInitialized = true;
+        return;
+    }
+
+    // 3. Se l’audio sta ancora caricando, aspetta
     if (!audioReady) {
         console.log("⏳ Audio non ancora pronto");
         return;
     }
 
+    // 4. Se tutto è pronto, suona
     playSW = !playSW;
     Mydraw();
 }
-
 
 
 function btnFirst() {
