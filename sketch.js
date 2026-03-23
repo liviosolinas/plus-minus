@@ -429,34 +429,20 @@ function Mydraw()
 function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    masterGain = new p5.Gain();
-    masterGain.connect();
-    masterGain.amp(1);
-
     filesLoaded = 0;
 
+    // Invece di caricare i file con loadSound,
+    // memorizziamo SOLO gli URL.
     for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = loadSound(
-            'data/sound' + i + '.mp3',
-
-            // SUCCESSO
-            () => {
-                filesLoaded++;
-                console.log("Caricato:", i);
-
-                if (filesLoaded === TOTAL_FILES) {
-                    console.log("🎉 Tutti i file audio caricati!");
-                    onAllAudioLoaded();
-                }
-            },
-
-            // ERRORE
-            () => {
-                console.log("❌ Errore caricamento:", i);
-            }
-        );
+        audioFiles[i] = 'data/sound' + i + '.mp3';
+        filesLoaded++;
+        console.log("Registrato URL:", audioFiles[i]);
     }
+
+    console.log("🎉 Tutti gli URL audio registrati!");
+    onAllAudioLoaded();
 }
+
 
 async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
