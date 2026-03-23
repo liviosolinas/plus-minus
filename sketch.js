@@ -913,6 +913,15 @@ function mousePressed()
     {
         console.log("✅ AudioContext:" + ctx.state);
     }
+    // 2. Se l’audio non è stato inizializzato, fallo ORA
+    if (!audioInitialized) {
+        console.log("🔧 Inizializzo audio al primo click");
+        initAudio();
+        
+        return;
+    }
+
+
     if (!audioReady) {
         console.log("⏳ Attendi: audio non ancora pronto");
         return;
