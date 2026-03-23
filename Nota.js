@@ -194,7 +194,7 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
               channel.setVolume(volume);
               channel.setReverb(reverbAmount);
               console.log(`\tplay tempo:${tempo} rate:${rate} volume:${volume} cueStart:${cueStart} duration:${duration}`, millis());
-              channel.soundFile.play(tempo, rate, volume, cueStart, duration);
+              channel.soundFile.play(0, rate, volume, cueStart, duration); //tempo
               channel.envelope.play(); 
             }
             else
