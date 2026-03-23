@@ -1,6 +1,4 @@
 //voice pool
-let audioCtx;
-
 function getAudioContext() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
