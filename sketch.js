@@ -451,32 +451,33 @@ function Mydraw()
 function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
+    const ctx = getAudioContext();
+
+    // CREA IL MASTER GAIN UNA SOLA VOLTA
+    if (!masterGain) {
+        masterGain = ctx.createGain();
+        masterGain.gain.value = 1.0;
+        masterGain.connect(ctx.destination);
+        console.log("MASTERGAIN CREATO:", masterGain);
+        console.log("MASTERGAIN FIXED:", masterGain.gain.value);
+    }
+
     audioReady = false;
     filesLoaded = 0;
 
-    // Invece di caricare i file con loadSound,
-    // memorizziamo SOLO gli URL.
+    // registra gli URL
     for (let i = 0; i < TOTAL_FILES; i++) {
         audioFiles[i] = 'data/sound' + i + '.mp3';
         filesLoaded++;
-        console.log("Registrato URL:", audioFiles[i]);
     }
 
-    console.log("🎉 Tutti gli URL audio registrati!");
     onAllAudioLoaded();
-    audioInitialized = true;
 }
 
 
 async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
-
-    const ctx = getAudioContext();
-    masterGain = ctx.createGain();
-    masterGain.gain.value = 1.0;
-    masterGain.connect(ctx.destination);
-    console.log("MASTERGAIN FIXED:", masterGain.gain.value);
-
+    
     const barEl  = document.getElementById("loading-bar");
     const textEl = document.getElementById("loading-text");
 
