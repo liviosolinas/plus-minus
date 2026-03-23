@@ -458,6 +458,7 @@ async function onAllAudioLoaded() {
     masterGain.connect(ctx.destination);
 
     for (let i = 0; i < TOTAL_FILES; i++) {
+        console.log("onAllAudioLoaded() => audioFiles[i]=" + audioFiles[i]);
         const buffer = await loadSample(audioFiles[i]);
         channels[i] = new AudioChannel(buffer, masterGain);
     }
