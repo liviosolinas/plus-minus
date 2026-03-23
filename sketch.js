@@ -1178,64 +1178,55 @@ function stop()
 } 
 
 
-function setupMusic() 
-{
+async function setupMusic() {
     let ctx = getAudioContext();
 
-    // MASTER (WebAudio)
+    // MASTER
     masterGain = ctx.createGain();
     masterGain.gain.value = 1.0;
     masterGain.connect(ctx.destination);
 
     // --- HARD ---
-    loadSound('data/GraniHard.mp3', (sound) => {
-        const buffer = sound.buffer;
+    const bufferHard = await loadSample('data/GraniHard.mp3');
+    gspHard = new GranularSamplePlayer(ctx, bufferHard);
 
-        gspHard = new GranularSamplePlayer(ctx, buffer);
+    randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
+    intervalGraniHard   = new Glide(ctx, k_intervalGraniHard, 10);
+    grainSizeGraniHard  = new Glide(ctx, k_grainSizeGraniHard, 10);
+    positionGraniHard   = new Glide(ctx, k_positionGraniHard, 30);
+    pitchGraniHard      = new Glide(ctx, 1, 20);
 
-        randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
-        intervalGraniHard   = new Glide(ctx, k_intervalGraniHard, 10);
-        grainSizeGraniHard  = new Glide(ctx, k_grainSizeGraniHard, 10);
-        positionGraniHard   = new Glide(ctx, k_positionGraniHard, 30);
-        pitchGraniHard      = new Glide(ctx, 1, 20);
+    gspHard.setRandomness(randomnessGraniHard);
+    gspHard.setGrainInterval(intervalGraniHard);
+    gspHard.setGrainSize(grainSizeGraniHard);
+    gspHard.setPosition(positionGraniHard);
+    gspHard.setPitch(pitchGraniHard);
 
-        gspHard.setRandomness(randomnessGraniHard);
-        gspHard.setGrainInterval(intervalGraniHard);
-        gspHard.setGrainSize(grainSizeGraniHard);
-        gspHard.setPosition(positionGraniHard);
-        gspHard.setPitch(pitchGraniHard);
-
-        gainGraniHard = ctx.createGain();
-        gainGraniHard.gain.value = 0.5;
-
-        gspHard.connect(gainGraniHard);
-        gainGraniHard.connect(masterGain);
-    });
+    gainGraniHard = ctx.createGain();
+    gainGraniHard.gain.value = 0.5;
+    gspHard.connect(gainGraniHard);
+    gainGraniHard.connect(masterGain);
 
     // --- SOFT ---
-    loadSound('data/GraniSoft.mp3', (sound) => {
-        const buffer = sound.buffer;
+    const bufferSoft = await loadSample('data/GraniSoft.mp3');
+    gspSoft = new GranularSamplePlayer(ctx, bufferSoft);
 
-        gspSoft = new GranularSamplePlayer(ctx, buffer);
+    randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
+    intervalGraniSoft   = new Glide(ctx, k_intervalGraniSoft, 10);
+    grainSizeGraniSoft  = new Glide(ctx, k_grainSizeGraniSoft, 10);
+    positionGraniSoft   = new Glide(ctx, k_positionGraniSoft, 30);
+    pitchGraniSoft      = new Glide(ctx, 1, 20);
 
-        randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
-        intervalGraniSoft   = new Glide(ctx, k_intervalGraniSoft, 10);
-        grainSizeGraniSoft  = new Glide(ctx, k_grainSizeGraniSoft, 10);
-        positionGraniSoft   = new Glide(ctx, k_positionGraniSoft, 30);
-        pitchGraniSoft      = new Glide(ctx, 1, 20);
+    gspSoft.setRandomness(randomnessGraniSoft);
+    gspSoft.setGrainInterval(intervalGraniSoft);
+    gspSoft.setGrainSize(grainSizeGraniSoft);
+    gspSoft.setPosition(positionGraniSoft);
+    gspSoft.setPitch(pitchGraniSoft);
 
-        gspSoft.setRandomness(randomnessGraniSoft);
-        gspSoft.setGrainInterval(intervalGraniSoft);
-        gspSoft.setGrainSize(grainSizeGraniSoft);
-        gspSoft.setPosition(positionGraniSoft);
-        gspSoft.setPitch(pitchGraniSoft);
-
-        gainGraniSoft = ctx.createGain();
-        gainGraniSoft.gain.value = 0.5;
-
-        gspSoft.connect(gainGraniSoft);
-        gainGraniSoft.connect(masterGain);
-    });
+    gainGraniSoft = ctx.createGain();
+    gainGraniSoft.gain.value = 0.5;
+    gspSoft.connect(gainGraniSoft);
+    gainGraniSoft.connect(masterGain);
 }
 
 
