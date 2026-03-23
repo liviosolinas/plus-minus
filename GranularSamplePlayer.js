@@ -6,26 +6,20 @@ class GranularSamplePlayer {
 
         this.isPlaying = false;
 
-        // Parametri granulari
-        this.grainSize = 0.1;   // secondi
-        this.overlap = 0.02;    // secondi
+        this.grainSize = 0.1;
+        this.overlap = 0.02;
         this.randomness = 0.5;
         this.pitch = 1.0;
 
-        // Gain dedicato per i granulari
         this.outputGain = this.context.createGain();
-        this.outputGain.gain.value = 0.4; // volume di base
+        this.outputGain.gain.value = 0.4;
         this.outputGain.connect(this.masterGain);
 
         this.intervalId = null;
     }
 
     setGrainSize(seconds) {
-        this.grainSize = Math.max(0.01, seconds); // minimo 10ms
-    }
-
-    setOverlap(seconds) {
-        this.overlap = Math.min(this.grainSize - 0.005, seconds);
+        this.grainSize = Math.max(0.01, seconds);
     }
 
     setRandomness(value) {
@@ -59,25 +53,20 @@ class GranularSamplePlayer {
         const duration = this.buffer.duration;
         const grainSize = this.grainSize;
 
-        // Punto di partenza casuale
         const startTime = Math.random() * Math.max(0, duration - grainSize);
 
-        // Crea il grain
         const grain = this.context.createBufferSource();
         grain.buffer = this.buffer;
         grain.playbackRate.value = this.pitch;
 
-        // Gain per evitare click
         const gainNode = this.context.createGain();
         gainNode.gain.setValueAtTime(0, this.context.currentTime);
         gainNode.gain.linearRampToValueAtTime(1, this.context.currentTime + 0.01);
         gainNode.gain.linearRampToValueAtTime(0, this.context.currentTime + grainSize - 0.01);
 
-        // Routing
         grain.connect(gainNode);
         gainNode.connect(this.outputGain);
 
-        // Avvia il grain
         grain.start(this.context.currentTime, startTime, grainSize);
         grain.stop(this.context.currentTime + grainSize);
     }
