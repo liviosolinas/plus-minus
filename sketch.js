@@ -464,7 +464,7 @@ async function onAllAudioLoaded() {
     }
 
     eventoPrec = new Evento();
-    setupMusic();
+    await setupMusic();
 
     audioReady = true;
     console.log("🎉 Audio pronto!");
