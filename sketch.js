@@ -428,7 +428,8 @@ function Mydraw()
 
 function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
-
+    
+    audioReady = false;
     filesLoaded = 0;
 
     // Invece di caricare i file con loadSound,
@@ -449,7 +450,7 @@ async function onAllAudioLoaded() {
 
     if (loadingDiv) {
         loadingDiv.html("Caricamento file audio...");
-        setTimeout(() => loadingDiv.remove(), 1000);
+        loadingDiv.show();
     }
 
     const ctx = getAudioContext();
@@ -471,7 +472,7 @@ async function onAllAudioLoaded() {
 
     if (loadingDiv) {
         loadingDiv.html("Audio pronto!");
-        setTimeout(() => loadingDiv.remove(), 1000);
+        setTimeout(() => loadingDiv.hide(), 1000);
     }
 }
 
