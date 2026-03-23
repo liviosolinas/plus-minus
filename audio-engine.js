@@ -26,6 +26,7 @@ async function loadSample(url, retries = 3, delayMs = 200) {
             await new Promise(res => setTimeout(res, delayMs));
         }
     }
+}
 
 class Voice {
     constructor(ctx, buffer, masterGain) {
