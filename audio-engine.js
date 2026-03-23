@@ -51,7 +51,7 @@ class Voice {
     }
 
     play(volume, pitch, duration, filterFreq) {
-        if(iDebug) console.log("🎧 Voice.play()", { volume, pitch, duration, filterFreq });
+        if(isDebug) console.log("🎧 Voice.play()", { volume, pitch, duration, filterFreq });
 
         if (this.busy) {
             console.log("⚠️ Voice occupata, salto");
@@ -79,7 +79,7 @@ class Voice {
 
         src.onended = () => {
             this.busy = false;
-            if(iDebug) console.log("✅ Voice.onended");
+            if(isDebug) console.log("✅ Voice.onended");
         };
 
         return true;
