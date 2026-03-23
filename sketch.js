@@ -50,6 +50,7 @@ let loadingDiv;
 //Minim minim;
 //AudioSample[] audioFiles;
 //AudioPlayer[] audioFiles;
+let audioCtx;
 let gspHard, gspSoft; 
 let gainGraniHard, gainGraniSoft; 
 let gainMaster; 
@@ -77,7 +78,7 @@ let reverb;
 let reverbGain; 
 let gainEnvelope; 
 
-let audiocontext; //usare getAudioContext()   //Processing>beads
+//let audiocontext; //usare getAudioContext()   //Processing>beads
 let masterGain , masterGainWeb; 
 let sampleGraniHard, sampleGraniSoft; 
 let randomnessGraniHard, intervalGraniHard, grainSizeGraniHard, positionGraniHard, pitchGraniHard; 
@@ -1273,7 +1274,7 @@ async function setupMusic() {
     gspSoft.setPitch(pitchGraniSoft.value);
 }
 
-
+/*
 function setupGrain(sound, type) 
 {
     console.log("======================= WARNING: setupGrain() =======================");
@@ -1297,13 +1298,13 @@ function setupGrain(sound, type)
     filter.connect(gainNode);
 
     // Modifiche al pitch e alla velocità
-    /*
-    randomnessGraniHard = createGain(0.1);
-    intervalGraniHard = createGain(0.05);
-    grainSizeGraniHard = createGain(0.2);
-    positionGraniHard = createGain(0.5);
-    pitchGraniHard = createGain(1.0);
-    */
+    
+    //randomnessGraniHard = createGain(0.1);
+    //intervalGraniHard = createGain(0.05);
+    //grainSizeGraniHard = createGain(0.2);
+    //positionGraniHard = createGain(0.5);
+    //pitchGraniHard = createGain(1.0);
+    
 
     //source.playbackRate.value = pitchGraniHard.gain.value;
     source.connect(masterGain);
@@ -1318,6 +1319,7 @@ function createGain(value)
     gainNode.gain.value = value;
     return gainNode;
 }
+*/
 
 //metodo non usato
 function playMusic() 
