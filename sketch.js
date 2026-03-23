@@ -473,7 +473,7 @@ async function onAllAudioLoaded() {
 
     if (loadingDiv) {
         loadingDiv.html("Audio pronto!");
-        setTimeout(() => loadingDiv.hide(), 1000);
+        setTimeout(() => loadingDiv.hide(), 800);
     }
 }
 
