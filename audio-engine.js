@@ -1,5 +1,6 @@
 //voice pool
 let audioCtx;
+
 function getAudioContext() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -7,8 +8,7 @@ function getAudioContext() {
     return audioCtx;
 }
 
-async function loadSample(url, retries = 3, delayMs = 200) 
-{
+async function loadSample(url, retries = 3, delayMs = 200) {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
             const response = await fetch(url, { cache: "no-store" });
@@ -16,6 +16,7 @@ async function loadSample(url, retries = 3, delayMs = 200)
 
             const arrayBuffer = await response.arrayBuffer();
             return await getAudioContext().decodeAudioData(arrayBuffer);
+
         } catch (err) {
             console.warn(`Errore caricando ${url} (tentativo ${attempt}):`, err);
 
@@ -27,8 +28,13 @@ async function loadSample(url, retries = 3, delayMs = 200)
             await new Promise(res => setTimeout(res, delayMs));
         }
     }
-}
+}   //  <--- QUESTA CHIUDE LA FUNZIONE loadSample
 
+
+
+// =========================
+//        VOICE
+// =========================
 class Voice {
     constructor(ctx, buffer, masterGain) {
         this.ctx = ctx;
@@ -74,6 +80,11 @@ class Voice {
     }
 }
 
+
+
+// =========================
+//     AUDIO CHANNEL
+// =========================
 class AudioChannel {
     constructor(buffer, masterGain, voices = 64) {
         this.voices = [];
