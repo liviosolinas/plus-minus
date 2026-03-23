@@ -458,8 +458,9 @@ function initAudio() {
         masterGain = ctx.createGain();
         masterGain.gain.value = 1.0;
         masterGain.connect(ctx.destination);
-        console.log("MASTERGAIN CREATO:", masterGain);
+        console.log("MASTERGAIN GLOBAL:", masterGain);
         console.log("MASTERGAIN FIXED:", masterGain.gain.value);
+        console.log("MASTERGAIN CONNECTED TO:", masterGain.context.destination);
     }
     audioInitialized = true;
     audioReady = false;
