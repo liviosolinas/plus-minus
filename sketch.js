@@ -492,10 +492,10 @@ async function onAllAudioLoaded() {
     await setupMusic();
 
     audioReady = true;
-    console.log("🎉 Audio pronto!");
-    console.log("🎹 TEST: provo a suonare una nota di test...");
+    console.log("🎉 Audio pronto!");    
 
     if(isDebug) {
+        console.log("🎹 TEST: nota di test...");
         const testIndex = 60; // scegli un indice che sai che contiene una nota chiara
         const testChannel = channels[testIndex];
         
