@@ -461,7 +461,7 @@ function initAudio() {
         console.log("MASTERGAIN CREATO:", masterGain);
         console.log("MASTERGAIN FIXED:", masterGain.gain.value);
     }
-
+    audioInitialized = true;
     audioReady = false;
     filesLoaded = 0;
 
@@ -470,7 +470,7 @@ function initAudio() {
         audioFiles[i] = 'data/sound' + i + '.mp3';
         filesLoaded++;
     }
-
+    
     onAllAudioLoaded();
 }
 
