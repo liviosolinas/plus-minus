@@ -1,4 +1,5 @@
-class Nota { 
+class Nota 
+{ 
     //proprieta'
     altezza; 
     durata; 
