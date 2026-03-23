@@ -1,10 +1,11 @@
 //voice pool
 function getAudioContext() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!window.audioCtx) {
+        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    return audioCtx;
+    return window.audioCtx;
 }
+
 
 async function loadSample(url, retries = 3, delayMs = 200) {
     for (let attempt = 1; attempt <= retries; attempt++) {
