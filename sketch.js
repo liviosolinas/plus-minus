@@ -450,7 +450,7 @@ function Mydraw()
 
 function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
-    
+
     audioReady = false;
     filesLoaded = 0;
 
@@ -474,6 +474,7 @@ async function onAllAudioLoaded() {
     masterGain = ctx.createGain();
     masterGain.gain.value = 1.0;
     masterGain.connect(ctx.destination);
+    console.log("MASTERGAIN FIXED:", masterGain.gain.value);
 
     const barEl  = document.getElementById("loading-bar");
     const textEl = document.getElementById("loading-text");
