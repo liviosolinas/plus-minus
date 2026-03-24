@@ -29,69 +29,36 @@ async function loadSample(url, retries = 3, delayMs = 200) {
 //        VOICE
 // =========================
 class Voice {
-    constructor(ctx, masterGain, url) {
-        this.url = url;     // URL del file audio (es: "./data/sound50.mp3")
+    constructor(url) {
+        this.audio = new Audio(url);   // Precaricato una volta sola
+        this.audio.preload = "auto";
         this.busy = false;
+
+        // Quando finisce, libera la voce
+        this.audio.addEventListener("ended", () => {
+            this.busy = false;
+        });
     }
 
     play(buffer, volume, pitch, duration, filterFreq) {
+        if (this.busy) return;
+
         this.busy = true;
 
-        const a = new Audio(this.url);
+        this.audio.currentTime = 0;    // Riparte dall’inizio
+        this.audio.volume = volume;
+        this.audio.playbackRate = pitch;
 
-        // volume
-        a.volume = volume;
+        this.audio.play().catch(err => {
+            console.warn("Audio play() error:", err);
+            this.busy = false;
+        });
 
-        // pitch (playbackRate)
-        a.playbackRate = pitch;
-
-        // suona
-        a.play();
-
-        // quando finisce, libera la voce
+        // Fallback: libera la voce dopo la durata
         setTimeout(() => {
             this.busy = false;
         }, duration * 1000);
     }
-    /*
-    constructor(ctx, masterGain) {
-        this.ctx = ctx;
-        this.busy = false;
-
-        this.gain = ctx.createGain();
-        this.filter = ctx.createBiquadFilter();
-        this.filter.type = "lowpass";
-        this.filter.frequency.value = 20000;
-
-        this.gain.connect(this.filter);
-        this.filter.connect(masterGain);
-    }
-
-    play(buffer, volume, pitch, duration, filterFreq) {
-        this.busy = true;
-
-        const src = this.ctx.createBufferSource();
-        src.buffer = buffer;
-        src.playbackRate.value = pitch;
-
-        src.connect(this.gain);
-
-        const now = this.ctx.currentTime;
-
-        this.filter.frequency.cancelScheduledValues(now);
-        this.filter.frequency.setValueAtTime(filterFreq, now);
-
-        this.gain.gain.cancelScheduledValues(now);
-        //this.gain.gain.setValueAtTime(volume, now);
-
-        src.start(now);
-        src.stop(now + duration);
-
-        src.onended = () => {
-            this.busy = false;
-        };
-    }
-    */
 }
 
 
@@ -116,7 +83,6 @@ class AudioChannel {
                 return;
             }
         }
-        console.warn("⚠️ Tutte le voci occupate!");
+        console.warn("⚠️ Tutte le voci occupate per", this.url);
     }
 }
-
