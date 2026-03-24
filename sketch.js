@@ -474,7 +474,7 @@ async function initAudio() {
     // Carica tutti i file
     await onAllAudioLoaded();
 
-    console.log("🎉 Audio pronto!");
+    console.log("🎉 initAudio() pronto!");
 }
 
 
