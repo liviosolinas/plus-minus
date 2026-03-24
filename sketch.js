@@ -49,7 +49,7 @@ let testSong , testEnv;
 */   
 
 let audioFiles = []; 
-
+let buffers = [];
 let sampleGain = []; 
 let gainValue = []; 
 let rateValue = []; 
