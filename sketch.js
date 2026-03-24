@@ -784,15 +784,6 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     return partitura.aPagina[pag].aQuadrati[iEvento];
 }
 
-    // --- 5. SALVATAGGI E USCITA ---
-    partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
-    mills = millis();
-    canPlay = true;
-
-    console.log("OUT: playMusicItem()");
-    return partitura.aPagina[pag].aQuadrati[iEvento];
-}
-
 function update(x, y) 
 {
 
