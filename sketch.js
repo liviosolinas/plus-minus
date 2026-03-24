@@ -784,8 +784,8 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
         canPlay = true;
-        //gspHard.stop();
-        //gspSoft.stop();
+        gspHard.stop();
+        gspSoft.stop();
         Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
     }, durataEvento);
     
