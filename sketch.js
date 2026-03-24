@@ -449,7 +449,8 @@ function Mydraw()
 
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
-
+    if(audioReady) return;
+    
     // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
     if (!window.audioCtx || window.audioCtx.state === "closed") {
         window.audioCtx = new AudioContext();
@@ -459,8 +460,6 @@ async function initAudio() {
         await window.audioCtx.resume();
     }
     
-    if(audioReady) return;
-
     // MASTER GAIN
     window.masterGain = audioCtx.createGain();
     window.masterGain.gain.value = 1.0;
@@ -527,19 +526,19 @@ async function onAllAudioLoaded() {
 }
 
 async function btnPlay() {
-    if (!audioReady) {
+    if (!window.audioCtx) {
         console.log("🔧 Inizializzo audio da btnPlay");
-        await initAudio();
+        initAudio();
+        return;
+    }
+
+    if (!audioReady) {
+        console.log("⏳ Audio in caricamento...");
+        return;
     }
 
     if (window.audioCtx.state !== "running") {
         await window.audioCtx.resume();
-        console.log("✅ AudioContext attivato:", window.audioCtx.state);
-    }
-
-    if (!audioReady) {
-        console.log("⏳ Audio non ancora pronto");
-        return;
     }
 
     playSW = !playSW;
@@ -924,16 +923,18 @@ function update(x, y)
     */
 } 
 
-function mousePressed() {
-    if ((!window.audioCtx) || (!audioReady)) 
-    {
-        initAudio().then(() => {
-            audioReady = true;
-            console.log("🎧 Audio attivato!");
-        });
+function mousePressed() {  
+     if (!window.audioCtx) {
+        initAudio();
         return;
     }
 
+    // 2️⃣ Se l’audio sta ancora caricando → NON richiamare initAudio()
+    if (!audioReady) {
+        console.log("⏳ Audio in caricamento...");
+        return;
+    }
+    
      
     //console.log("mouseX=",mouseX , "playX=" , playX , "playSize=" , playSize , "mouseY=" , mouseY , "playY=" , playY);
     if (mouseX >= playX && mouseX <= playX + playSize && mouseY >= playY && mouseY <= playY + playSize) 
