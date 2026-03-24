@@ -468,10 +468,8 @@ async function initAudio() {
     audioInitialized = true;
     audioReady = false;
 
-    let i = 0;
-    audioFiles[i] = './data/sound' + i + '.wav';
-    for (let i = 1; i < TOTAL_FILES; i++) {
-        audioFiles[i] = './data/sound' + i + '.aiff';
+    for (let i = 0; i < TOTAL_FILES; i++) {
+        audioFiles[i] = './data/sound' + i + '.mp3';
     }
 
     onAllAudioLoaded();  // <-- qui il masterGain ESISTE già
@@ -1263,7 +1261,7 @@ async function setupMusic() {
     let ctx = getAudioContext();
 
     // --- HARD ---
-    const bufferHard = await loadSample('.data/GraniHard.wav');
+    const bufferHard = await loadSample('.data/GraniHard.mp3');
     gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain);
 
     randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
@@ -1277,7 +1275,7 @@ async function setupMusic() {
     gspHard.setPitch(pitchGraniHard.value);
 
     // --- SOFT ---
-    const bufferSoft = await loadSample('.data/GraniSoft.wav');
+    const bufferSoft = await loadSample('.data/GraniSoft.mp3');
     gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain);
 
     randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
