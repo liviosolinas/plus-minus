@@ -926,7 +926,7 @@ function update(x, y)
     */
 } 
 
-function mousePressed() 
+async function mousePressed() 
 {  
      // 1️⃣ Se l’audio non è ancora inizializzato → inizializzalo e STOP
     if (!window.audioCtx || !audioReady) {
