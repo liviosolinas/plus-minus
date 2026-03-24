@@ -456,6 +456,10 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
+    if (!window.audioCtx) {
+        window.audioCtx = new AudioContext();
+    }
+    
     // 1. Ottieni SEMPRE lo stesso AudioContext globale
     const ctx = getAudioContext();  // questo ora restituisce window.audioCtx
 
