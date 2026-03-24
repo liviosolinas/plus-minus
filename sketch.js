@@ -466,7 +466,7 @@ async function initAudio() {
     masterGain.connect(audioCtx.destination);
 
     // Carica tutti i file
-    await loadAllBuffers();
+    await onAllAudioLoaded();
 
     console.log("🎉 Audio pronto!");
     testBeep();
