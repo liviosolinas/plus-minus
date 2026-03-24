@@ -634,13 +634,13 @@ function keyTyped()
     let k = key;
     //if (k == CODED | i_txt < 0) return; 
     let tbox = tboxes[i_txt]; 
-    let len = tbox.txt.length; 
-    if (k == BACKSPACE) tbox.txt = tbox.txt.substring(0, max(0, len - 1)); 
-    else if (len >= tbox.lim) return; 
-    else if (k == ENTER | k == RETURN) tbox.txt += "\n"; 
-    else if (k == TAB & len < tbox.lim - 3) tbox.txt += "    "; 
-    else if (k == DELETE) tbox.txt = ""; 
-    else if (k >= ' ') tbox.txt += str(k);
+    //let len = tbox.txt.length; 
+    //if (k == BACKSPACE) tbox.txt = tbox.txt.substring(0, max(0, len - 1)); 
+    //else if (len >= tbox.lim) return; 
+    //else if (k == ENTER | k == RETURN) tbox.txt += "\n"; 
+    //else if (k == TAB & len < tbox.lim - 3) tbox.txt += "    "; 
+    //else if (k == DELETE) tbox.txt = ""; 
+    //else if (k >= ' ') tbox.txt += str(k);
 
     Mydraw();//loop();     
 }
