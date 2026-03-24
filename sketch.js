@@ -785,7 +785,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
         canPlay = true;
-        Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
+        //Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
     }, durataEvento);
     
     console.log("OUT: playMusicItem()");
