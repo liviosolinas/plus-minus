@@ -727,6 +727,8 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
 {
     console.log("IN: playMusicItem()"); 
     //loop(); //riattiva il draw 
+
+    if (!audioReady) return; //non suona se audio non pronto
     
     //testSong.play(audiocontext.currentTime);
     /*
