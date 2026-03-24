@@ -480,34 +480,22 @@ async function initAudio() {
 
 
 async function onAllAudioLoaded() {
-    console.log("🔧 Carico e decodifico i file audio...");
+    console.log("🔧 Inizializzo i canali audio (HTMLAudio)...");
 
     const barEl  = document.getElementById("loading-bar");
     const textEl = document.getElementById("loading-text");
 
     window.channels = [];
-    buffers = [];
 
     for (let i = 0; i < TOTAL_FILES; i++) {
 
-        // 1️⃣ Scarica UNA sola volta
+        // 1️⃣ URL del file audio
         const url = `./data/sound${i}.mp3`;
-        const resp = await fetch(url);
-        const arr  = await resp.arrayBuffer();
 
-        // 2️⃣ Decodifica UNA sola volta
-        const decoded = await audioCtx.decodeAudioData(arr);
-        buffers[i] = decoded;
+        // 2️⃣ Crea il canale usando SOLO l’URL
+        window.channels[i] = new AudioChannel(url, 32);        
 
-        // 3️⃣ Crea il canale usando il buffer decodificato
-        window.channels[i] = new AudioChannel(
-            window.audioCtx,
-            decoded,
-            window.masterGain,
-            32
-        );
-
-        // 4️⃣ Aggiorna la barra
+        // 3️⃣ Aggiorna la barra
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
         if (barEl)  barEl.style.width = perc + "%";
         if (textEl) textEl.innerText = `Caricamento audio... ${perc}%`;
