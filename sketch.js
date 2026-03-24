@@ -11,7 +11,7 @@ window.channels = [];
 
 let TOTAL_FILES = 110;
 let filesLoaded = 0;
-let audioReady = false;
+
 let audioInitialized = false;
 let TIPO_ESECUZIONE_MIDI = "MIDI";
 let TIPO_ESECUZIONE_FILES = "FILES";
@@ -28,6 +28,7 @@ let tboxes = new Array(NUM);
 let i_txt; 
 let btn_scheda; 
 let loadingDiv;
+let audioReady = false;
 
 //Minim minim;
 //AudioSample[] audioFiles;
@@ -453,26 +454,36 @@ function Mydraw()
 }
 
 async function initAudio() {
-    console.log("🎵 Inizializzo l’audio...");
+    console.log("🔧 Creo AudioContext al primo click");
 
-    // 1. Crea AudioContext DOPO il click
-    window.audioCtx = new AudioContext();
-    await window.audioCtx.resume();
-
-    // 2. Crea masterGain SUBITO
-    window.masterGain = window.audioCtx.createGain();
-    window.masterGain.gain.value = 1.0;
-    window.masterGain.connect(window.audioCtx.destination);
-
-    // 3. Ora puoi creare i canali
-    audioInitialized = true;
-    audioReady = false;
-
-    for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = './data/sound' + i + '.mp3';
+    if (!window.audioCtx) {
+        window.audioCtx = new AudioContext();
     }
 
-    onAllAudioLoaded();  // <-- qui il masterGain ESISTE già
+    console.log("🎵 Inizializzo l’audio...");
+
+    // MASTER GAIN
+    window.masterGain = window.audioCtx.createGain();
+    window.masterGain.gain.value = 1;
+    window.masterGain.connect(window.audioCtx.destination);
+
+    console.log("🔧 Creo i canali audio...");
+
+    window.channels = [];
+
+    for (let i = 0; i < TOTAL_FILES; i++) {
+        const url = `./data/sound${i}.mp3`;   // o .wav
+        const buffer = await loadSample(url);
+
+        window.channels[i] = new AudioChannel(
+            window.audioCtx,
+            buffer,
+            window.masterGain,
+            32
+        );
+    }
+
+    console.log("🎉 Audio pronto!");
 }
 
 async function onAllAudioLoaded() {
@@ -935,54 +946,16 @@ function update(x, y)
     */
 } 
 
-function mousePressed() 
-{
-    let ctx = getAudioContext();
-
-     // 0. Se NON esiste ancora l'AudioContext → primo click → inizializza
-    if (!ctx) {
-        console.log("🔧 Creo AudioContext al primo click");
-        initAudio();
-        return;
-    }
-    if (ctx.state !== "running") 
-    {
-        ctx.resume().then(() => 
-        {
-            console.log("✅ AudioContext attivato");
-            if (!audioInitialized) {
-                initAudio();               
-            }
-        });
-    }
-    else
-    {
-        console.log("✅ AudioContext:" + ctx.state);
-    }
-    // 2. Se l’audio non è stato inizializzato, fallo ORA
-    if (!audioInitialized) {
-        console.log("🔧 Inizializzo audio al primo click");
-        initAudio();
-        
-        return;
-    }
-
-
+function mousePressed() {
     if (!audioReady) {
-        console.log("⏳ Attendi: audio non ancora pronto");
+        initAudio().then(() => {
+            audioReady = true;
+            console.log("🎧 Audio attivato!");
+        });
         return;
     }
-    
-    if (isDebug) 
-    {
-        //console.log("mousePressed: mouseX=" + mouseX + " mouseY=" + mouseY);
 
-        console.log("playSW=" + playSW); 
-        // id = pickGR1.get(mouseX,mouseY)[0]; 
-        // console.log("id=" + id);
-    }
-    
-    
+     
     //console.log("mouseX=",mouseX , "playX=" , playX , "playSize=" , playSize , "mouseY=" , mouseY , "playY=" , playY);
     if (mouseX >= playX && mouseX <= playX + playSize && mouseY >= playY && mouseY <= playY + playSize) 
     { 
