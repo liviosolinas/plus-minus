@@ -926,16 +926,17 @@ function update(x, y)
     */
 } 
 
-function mousePressed() {  
-     if (!window.audioCtx) {
+function mousePressed() 
+{  
+     // 1️⃣ Se l’audio non è ancora inizializzato → inizializzalo e STOP
+    if (!window.audioCtx || !audioReady) {
         initAudio();
         return;
     }
 
-    // 2️⃣ Se l’audio sta ancora caricando → NON richiamare initAudio()
-    if (!audioReady) {
-        console.log("⏳ Audio in caricamento...");
-        return;
+    // 2️⃣ Se il contesto è sospeso → resume
+    if (window.audioCtx.state !== "running") {
+        await window.audioCtx.resume();
     }
     
      
