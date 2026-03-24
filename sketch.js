@@ -551,6 +551,13 @@ async function onAllAudioLoaded() {
 function btnPlay() {
     let ctx = getAudioContext();
 
+    // 0. Se NON esiste ancora l'AudioContext → primo click → inizializza
+    if (!ctx) {
+        console.log("🔧 Creo AudioContext al primo click");
+        initAudio();
+        return;
+    }
+    
     // 1. Se il contesto non è running, attivalo
     if (ctx.state !== "running") {
         ctx.resume().then(() => {
