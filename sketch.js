@@ -1,5 +1,7 @@
 window.audioCtx = null;
 window.masterGain = null;
+window.channels = [];
+
 
 
 //// [processing-p5-convert] import processing.sound.*;
@@ -47,7 +49,6 @@ let testSong , testEnv;
 */   
 
 let audioFiles = []; 
-let channels = [];
 
 let sampleGain = []; 
 let gainValue = []; 
@@ -508,7 +509,7 @@ async function onAllAudioLoaded() {
 
     for (let i = 0; i < TOTAL_FILES; i++) {
         const buffer = await loadSample(audioFiles[i]);
-        channels[i] = new AudioChannel(buffer, window.masterGain, 32);
+        window.channels[i] = new AudioChannel(buffer, window.masterGain, 32);
 
         // aggiorna percentuale
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
@@ -525,7 +526,7 @@ async function onAllAudioLoaded() {
     if(isDebug) {
         console.log("🎹 TEST: nota di test...");
         const testIndex = 60; // scegli un indice che sai che contiene una nota chiara
-        const testChannel = channels[testIndex];
+        const testChannel = window.channels[testIndex];
         
         if (testChannel) {
             testChannel.play(0.8, 1.0, 2.0, 5000); // volume alto, 2 secondi, filtro aperto
