@@ -1,6 +1,7 @@
-window.audioCtx = null;
-window.masterGain = null;
-window.channels = [];
+let window.audioCtx = null;
+let window.masterGain = null;
+let window.channels = [];
+let window.audioReady = false;
 
 const NUM_FILES = 110;      // sound0.mp3 ... sound109.mp3
 const VOICES_PER_CHANNEL = 32;
@@ -23,7 +24,7 @@ let tboxes = new Array(NUM);
 let i_txt; 
 let btn_scheda; 
 let loadingDiv;
-let audioReady = false;
+
 
 //Minim minim;
 //AudioSample[] audioFiles;
@@ -246,7 +247,7 @@ function setup()
 
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
-    if(audioReady) return;
+    if(window.audioReady) return;
     
     // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
     if (!window.audioCtx || window.audioCtx.state === "closed") {
@@ -301,7 +302,7 @@ function onAllAudioLoaded() {
     document.getElementById("loading-overlay").style.display = "none";
 
     // Sblocca motore musicale
-    audioReady = true;
+    window.audioReady = true;
 }
 
 function updateLoadingBar(current, total) {
@@ -398,7 +399,7 @@ async function btnPlay() {
         return;
     }
 
-    if (!audioReady) {
+    if (!window.audioReady) {
         console.log("⏳ Audio in caricamento...");
         return;
     }
@@ -593,7 +594,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
 {
     console.log("IN: playMusicItem()");
 
-    if (!audioReady) return;
+    if (!window.audioReady) return;
 
     canPlay = false;
     let timeLayer = tempo;
@@ -836,7 +837,7 @@ function update(x, y)
 async function mousePressed() 
 {  
      // 1️⃣ Se l’audio non è ancora inizializzato → inizializzalo e STOP
-    if (!window.audioCtx || !audioReady) {
+    if (!window.audioCtx || !window.audioReady) {
         initAudio();
         return;
     }
