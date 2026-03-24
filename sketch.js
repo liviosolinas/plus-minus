@@ -782,10 +782,11 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     mills = millis();    
 
     let durataEvento = tempo * 1000;
+    if(isDebug) console.log("durataEvento=" , durataEvento);
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
         canPlay = true;
-        //Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
+        Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
     }, durataEvento);
     
     console.log("OUT: playMusicItem()");
