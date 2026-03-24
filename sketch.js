@@ -2,13 +2,6 @@ window.audioCtx = null;
 window.masterGain = null;
 window.channels = [];
 
-
-//// [processing-p5-convert] import processing.sound.*;
-// [processing-p5-convert] import ddf.minim.*;
-// [processing-p5-convert] import ddf.minim.ugens.*;
-// [processing-p5-convert] import beads.*;
-//// [processing-p5-convert] import javax.sound.midi.*;
-
 let TOTAL_FILES = 110;
 let filesLoaded = 0;
 
