@@ -779,9 +779,15 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     }
 
     partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
-    mills = millis();
-    canPlay = true;
+    mills = millis();    
 
+    let durataEvento = tempo * 1000;
+    // blocchiamo l’avanzamento finché non è passato il tempo musicale
+    setTimeout(() => {
+        canPlay = true;
+        Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
+    }, durataEvento);
+    
     console.log("OUT: playMusicItem()");
     return partitura.aPagina[pag].aQuadrati[iEvento];
 }
