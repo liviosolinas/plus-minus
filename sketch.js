@@ -301,7 +301,7 @@ function onAllAudioLoaded() {
     document.getElementById("loading-overlay").style.display = "none";
 
     // Sblocca motore musicale
-    window.audioReady = true;
+    audioReady = true;
 }
 
 function updateLoadingBar(current, total) {
@@ -381,6 +381,7 @@ function Mydraw()
     update(mouseX, mouseY);
     rect(playX, playY, playSize, playSize);
 }
+
 function drawCurrentEvent() {
     if (pag < dimPagine) {
         let evento = partitura.aPagina[pag].aQuadrati[iEvento];
