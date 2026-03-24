@@ -456,29 +456,22 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    // 1. Crea AudioContext SOLO se non esiste
-    if (!window.audioCtx) {
-        window.audioCtx = new AudioContext();   // ✔️ QUI È GIUSTO
-    }
+    // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
+    audioCtx = new AudioContext();
+    await audioCtx.resume();
 
-    await window.audioCtx.resume();             // ✔️ ora NON è null
+    // MASTER GAIN
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
 
-    // 2. Crea masterGain SOLO se non esiste
-    if (!window.masterGain) {
-        window.masterGain = window.audioCtx.createGain();
-        window.masterGain.gain.value = 1.0;
-        window.masterGain.connect(window.audioCtx.destination);
-    }
+    // Carica tutti i file
+    await loadAllBuffers();
 
-    audioInitialized = true;
-    audioReady = false;
-
-    for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = './data/sound' + i + '.mp3';
-    }
-
-    await onAllAudioLoaded();
+    console.log("🎉 Audio pronto!");
+    testBeep();
 }
+
 
 
 async function onAllAudioLoaded() {
@@ -491,6 +484,12 @@ async function onAllAudioLoaded() {
 
     for (let i = 0; i < TOTAL_FILES; i++) {
         const buffer = await loadSample(audioFiles[i]);
+
+        const url = `./data/sound${i}.mp3`;
+        const resp = await fetch(url);
+        const arr = await resp.arrayBuffer();
+        buffers[i] = await audioCtx.decodeAudioData(arr);
+        
         window.channels[i] = new AudioChannel(
             window.audioCtx,      // ctx corretto
             buffer,               // buffer corretto
@@ -533,7 +532,7 @@ async function onAllAudioLoaded() {
 async function btnPlay() {
     if (!audioInitialized) {
         console.log("🔧 Inizializzo audio al primo click");
-        await initAudio();
+        //await initAudio();
     }
 
     // qui ci assicuriamo che il contesto sia running
@@ -931,7 +930,8 @@ function update(x, y)
 } 
 
 function mousePressed() {
-    if (!audioReady) {
+    if ((!window.audioCtx) || (!audioReady)) 
+    {
         initAudio().then(() => {
             audioReady = true;
             console.log("🎧 Audio attivato!");
