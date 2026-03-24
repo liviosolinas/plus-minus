@@ -780,7 +780,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     mills = millis();    
 
     let durataEvento = tempo * 1000;
-    if(durataEvento < 6000 ) durataEvento = 6000;
+    if(durataEvento < 10000 ) durataEvento = 10000;
     if(isDebug) console.log("durataEvento=" , durataEvento);
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
