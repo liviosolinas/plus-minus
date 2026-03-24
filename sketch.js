@@ -373,9 +373,7 @@ function Mydraw()
             playSW = false;
             return;
         }
-
-        // Pianifica il prossimo Mydraw()
-        setTimeout(Mydraw, durataEvento * 1000);
+        
     }
 
     // GUI
@@ -782,6 +780,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     mills = millis();    
 
     let durataEvento = tempo * 1000;
+    if(durataEvento < 6000 ) durataEvento = 6000;
     if(isDebug) console.log("durataEvento=" , durataEvento);
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
