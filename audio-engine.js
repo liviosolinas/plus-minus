@@ -77,6 +77,7 @@ class AudioChannel {
     constructor(ctx, buffer, masterGain, voicesCount = 32) {
         this.ctx = ctx;
         this.buffer = buffer;
+        this.masterGain = masterGain;
         this.voices = [];
 
         for (let i = 0; i < voicesCount; i++) {
