@@ -598,7 +598,6 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     let timeLayer = tempo;
     let e, p;
 
-    // --- 1. ESECUZIONE EVENTO PRINCIPALE (logica originale) ---
     if (partitura.aPagina[pag].isLoaded) 
     {
         if (isDebug) {
@@ -607,7 +606,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
             console.log("\nLayer=" + (partitura.aPagina[pag].aQuadrati[iEvento].layer));
         }
 
-        // Esegue la logica dell’evento (NON suona ancora)
+        // 1) Esegue la logica dell’evento (NON suona ancora)
         tempo = partitura.aPagina[pag].aQuadrati[iEvento].Play(
             tempo,
             partitura.aPagina[pag].aCentralSound,
@@ -617,7 +616,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
             partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
         );
 
-        // --- 2. ESECUZIONE DEI LAYER (logica originale) ---
+        // 2) Layer (logica tua, invariata)
         let layer = partitura.aPagina[pag].aQuadrati[iEvento].layer;
 
         if (layer == t_Layer.One) 
@@ -716,7 +715,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
             );
         }
 
-        // --- 3. GESTIONE FLAG (logica originale) ---
+        // 3) Flag (logica tua, invariata)
         let evento = InsertFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
 
         if (evento != null) {
@@ -731,27 +730,59 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
             AggiornaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
         }
 
-        // --- 4. ⭐ SUONO DELL’EVENTO CON WEB AUDIO ⭐ ---
+        // 4) 🔊 SUONO REALE CON WEB AUDIO (USANDO centralSound)
         let cs = partitura.aPagina[pag].aQuadrati[iEvento].centralSound;
 
-        if (cs && cs.notaMidi !== undefined) 
+        // Per ora: se è evento "noise" (isNoise true) non suoniamo nulla con i sample
+        if (cs && !cs.isNoise) 
         {
-            let nota = cs.notaMidi;
-            let durata = cs.duration || 0.5;
-            let volume = cs.volume || 1.0;
-            let timbro = cs.timbroCS;
-            let articulation = cs.articulation;
+            // Prendiamo una nota "base" dalla tabella aCentralSound
+            let noteCS = partitura.aPagina[pag].aCentralSound[cs.tipoEvento];
+            if (noteCS && noteCS.length > 0) 
+            {
+                // Usa la prima nota come base
+                let baseNota = noteCS[0]; // oggetto Nota
+                let midiBase = baseNota.altezza; // già in indice 0..108
 
-            playNoteWithParams(
-                tempo,
-                durata,
-                nota,
-                volume,
-                timbro,
-                articulation
-            );
+                // Durata di default (se non hai ancora un campo dedicato)
+                let durata = 0.8;
+                let volume = 1.0;
+
+                // Salviamo dentro centralSound per eventuali usi futuri
+                cs.notaMidi = midiBase;
+                cs.duration = durata;
+                cs.volume = volume;
+                if (cs.articulation === undefined) {
+                    cs.articulation = t_Articulation.None;
+                }
+
+                if (isDebug) {
+                    console.log("SUONO NOTA MIDI:", cs.notaMidi, 
+                                "durata:", cs.duration, 
+                                "timbroCS:", cs.timbroCS, 
+                                "articulation:", cs.articulation);
+                }
+
+                // Chiamata reale al motore WebAudio
+                playNoteWithParams(
+                    tempo,
+                    cs.duration,
+                    cs.notaMidi,
+                    cs.volume,
+                    cs.timbroCS,
+                    cs.articulation
+                );
+            }
         }
     }
+
+    partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
+    mills = millis();
+    canPlay = true;
+
+    console.log("OUT: playMusicItem()");
+    return partitura.aPagina[pag].aQuadrati[iEvento];
+}
 
     // --- 5. SALVATAGGI E USCITA ---
     partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
