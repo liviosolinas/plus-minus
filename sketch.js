@@ -265,7 +265,7 @@ async function initAudio() {
     //createAudioChannels(window.masterGain);
     
     audioFiles = [];
-    for (let i = 0; i < TOTAL_FILES; i++) {
+    for (let i = 0; i < NUM_FILES; i++) {
         audioFiles[i] = `./data/sound${i}.mp3`;
     }
 
