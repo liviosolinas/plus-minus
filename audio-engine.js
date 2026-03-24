@@ -100,7 +100,7 @@ class Voice {
 class AudioChannel {
     constructor(buffer, masterGain, voices = 32) {
         this.voices = [];
-        const ctx = getAudioContext();
+        const ctx = window.audioCtx; //getAudioContext();
 
         if(isDebug)
         {
