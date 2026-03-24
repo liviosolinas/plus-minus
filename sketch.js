@@ -117,7 +117,22 @@ function preload()
 
 function setup()
 {
-    if (isDebug) console.log("\n=====setup()======="); 
+    if (isDebug) console.log("\n=====setup()=======");     
+    // ⭐ 1. CREA L’AUDIOCONTEXT UNA SOLA VOLTA
+    window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // ⭐ 2. CREA IL MASTER GAIN
+    window.masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+
+    // ⭐ 3. CREA L’ARRAY DEI CANALI
+    window.channels = {};
+
+    // ⭐ 4. CARICA TUTTI I FILE AUDIO
+    loadAllAudio();
+
+    
     // GUI
     frameRate(20);
     smooth(4);  // In p5.js smooth() normalmente non prevede un parametro, verificare se serve
