@@ -244,6 +244,7 @@ function draw()
     noLoop(); //blocca il draw di sistema
 }
 
+
 function Mydraw() 
 {
     if (isDebug) console.log("\n=====Mydraw()======="); 
