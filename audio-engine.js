@@ -1,8 +1,5 @@
 //voice pool
 function getAudioContext() {
-    if (!window.audioCtx) {
-        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
     return window.audioCtx;
 }
 
