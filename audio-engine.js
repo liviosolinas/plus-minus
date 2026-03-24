@@ -32,22 +32,13 @@ async function loadSample(url, retries = 3, delayMs = 200) {
 //        VOICE
 // =========================
 class Voice {
-    constructor(ctx, buffer, masterGain) {
+    constructor(ctx, masterGain) {
         this.ctx = ctx;
-        this.buffer = buffer;
+        this.masterGain = masterGain;
 
         this.gain = ctx.createGain();
         this.filter = ctx.createBiquadFilter();
         this.filter.type = "lowpass";
-
-        // 🔧 Forza routing stereo
-        this.gain.channelCount = 2;
-        this.filter.channelCount = 2;
-        masterGain.channelCount = 2;
-
-        this.gain.channelInterpretation = "speakers";
-        this.filter.channelInterpretation = "speakers";
-        masterGain.channelInterpretation = "speakers";
 
         this.gain.connect(this.filter);
         this.filter.connect(masterGain);
@@ -55,45 +46,23 @@ class Voice {
         this.busy = false;
     }
 
-    play(volume, pitch, duration, filterFreq) {
-        if(isDebug) console.log("🎧 Voice.play()", { volume, pitch, duration, filterFreq });
-
-        if (this.busy) {
-            console.log("⚠️ Voice occupata, salto");
-            return false;
-        }
-
+    play(buffer, volume, pitch, duration, filterFreq) {
         this.busy = true;
 
-        if(isDebug)
-        {
-            console.log("Voice-play() => GAIN NODE VALUE:", this.gain.gain.value);
-            console.log("Voice-play() => FILTER FREQ:", this.filter.frequency.value);
-        }
-
         const src = this.ctx.createBufferSource();
-        src.buffer = this.buffer;
+        src.buffer = buffer;
         src.playbackRate.value = pitch;
 
         src.connect(this.gain);
 
         const now = this.ctx.currentTime;
-
         this.filter.frequency.setValueAtTime(filterFreq, now);
-
-        // 🔊 per prova: niente envelope complicata, volume fisso
-        this.gain.gain.cancelScheduledValues(now);
         this.gain.gain.setValueAtTime(volume, now);
 
         src.start(now);
         src.stop(now + duration);
 
-        src.onended = () => {
-            this.busy = false;
-            if(isDebug) console.log("✅ Voice.onended");
-        };
-
-        return true;
+        src.onended = () => this.busy = false;
     }
 }
 
@@ -118,13 +87,15 @@ class AudioChannel {
         }
     }
 
+    // AudioChannel
     play(volume, pitch, duration, filterFreq) {
         for (let v of this.voices) {
             if (!v.busy) {
-                v.play(volume, pitch, duration, filterFreq);
+                v.play(this.buffer, volume, pitch, duration, filterFreq);
                 return;
             }
         }
         console.warn("⚠️ Tutte le voci occupate!");
     }
+
 }
