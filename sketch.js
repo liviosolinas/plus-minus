@@ -291,7 +291,7 @@ async function loadAllAudio() {
         // ⭐ SOLO ORA aggiorna la barra
         updateLoadingBar(i + 1, NUM_FILES);
     }
-
+    setupMusic();
     onAllAudioLoaded();
 }
 
