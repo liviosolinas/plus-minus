@@ -456,9 +456,12 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    // 1. Usa SEMPRE il contesto di p5.js
-    window.audioCtx = getAudioContext();
-    await window.audioCtx.resume();
+    // 1. Crea AudioContext SOLO se non esiste
+    if (!window.audioCtx) {
+        window.audioCtx = new AudioContext();   // ✔️ QUI È GIUSTO
+    }
+
+    await window.audioCtx.resume();             // ✔️ ora NON è null
 
     // 2. Crea masterGain SOLO se non esiste
     if (!window.masterGain) {
