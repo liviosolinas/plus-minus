@@ -52,22 +52,22 @@ class GranularSamplePlayer {
     playGrain() {
         const duration = this.buffer.duration;
         const grainSize = this.grainSize;
-
+    
         const startTime = Math.random() * Math.max(0, duration - grainSize);
-
+    
         const grain = this.context.createBufferSource();
         grain.buffer = this.buffer;
         grain.playbackRate.value = this.pitch;
-
+    
         const gainNode = this.context.createGain();
         gainNode.gain.setValueAtTime(0, this.context.currentTime);
         gainNode.gain.linearRampToValueAtTime(1, this.context.currentTime + 0.01);
         gainNode.gain.linearRampToValueAtTime(0, this.context.currentTime + grainSize - 0.01);
-
+    
         grain.connect(gainNode);
         gainNode.connect(this.outputGain);
-
+    
         grain.start(this.context.currentTime, startTime, grainSize);
-        //grain.stop(this.context.currentTime + grainSize);
     }
+
 }
