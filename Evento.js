@@ -481,7 +481,7 @@ class Evento {
         return tempo;
     }
 
-
+/*
 function playMusicItem(tempo, pag, iEvento, eventoPrec) 
 {
     console.log("IN: playMusicItem()");
@@ -677,6 +677,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     console.log("OUT: playMusicItem()");
     return partitura.aPagina[pag].aQuadrati[iEvento];
 }
+*/
 
     
     Play(tempo, aCentralSound, aSecondaryNotes, eventoPrec, isLayer, timbro) 
