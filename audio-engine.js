@@ -98,7 +98,9 @@ class Voice {
 //     AUDIO CHANNEL
 // =========================
 class AudioChannel {
-    constructor(buffer, masterGain, voices = 32) {
+    constructor(buffer, masterGain, voices = 32) 
+    {
+        this.buffer = buffer;
         this.voices = [];
         const ctx = window.audioCtx; //getAudioContext();
 
