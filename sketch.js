@@ -534,12 +534,11 @@ async function onAllAudioLoaded() {
 
 
 async function btnPlay() {
-    if (!audioInitialized) {
-        console.log("🔧 Inizializzo audio al primo click");
-        //await initAudio();
+    if (!audioReady) {
+        console.log("🔧 Inizializzo audio da btnPlay");
+        await initAudio();
     }
 
-    // qui ci assicuriamo che il contesto sia running
     if (window.audioCtx.state !== "running") {
         await window.audioCtx.resume();
         console.log("✅ AudioContext attivato:", window.audioCtx.state);
@@ -553,7 +552,6 @@ async function btnPlay() {
     playSW = !playSW;
     Mydraw();
 }
-
 
 
 
