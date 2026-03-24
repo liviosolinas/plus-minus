@@ -479,30 +479,35 @@ async function initAudio() {
 }
 
 
-
 async function onAllAudioLoaded() {
-    console.log("🔧 Creo i canali audio...");
-    
+    console.log("🔧 Carico e decodifico i file audio...");
+
     const barEl  = document.getElementById("loading-bar");
     const textEl = document.getElementById("loading-text");
 
     window.channels = [];
+    buffers = [];
 
     for (let i = 0; i < TOTAL_FILES; i++) {
-        const buffer = await loadSample(audioFiles[i]);
 
+        // 1️⃣ Scarica UNA sola volta
         const url = `./data/sound${i}.mp3`;
         const resp = await fetch(url);
-        const arr = await resp.arrayBuffer();
-        buffers[i] = await audioCtx.decodeAudioData(arr);
-        
+        const arr  = await resp.arrayBuffer();
+
+        // 2️⃣ Decodifica UNA sola volta
+        const decoded = await audioCtx.decodeAudioData(arr);
+        buffers[i] = decoded;
+
+        // 3️⃣ Crea il canale usando il buffer decodificato
         window.channels[i] = new AudioChannel(
-            window.audioCtx,      // ctx corretto
-            buffer,               // buffer corretto
-            window.masterGain,    // masterGain corretto
-            32                    // numero di voci
+            window.audioCtx,
+            decoded,
+            window.masterGain,
+            32
         );
 
+        // 4️⃣ Aggiorna la barra
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
         if (barEl)  barEl.style.width = perc + "%";
         if (textEl) textEl.innerText = `Caricamento audio... ${perc}%`;
@@ -512,20 +517,7 @@ async function onAllAudioLoaded() {
     await setupMusic();
 
     audioReady = true;
-    console.log("🎉 Audio pronto!");    
-
-    if (isDebug) {
-        console.log("🎹 TEST: nota di test...");
-        const testIndex = 60;
-        const testChannel = window.channels[testIndex];
-        
-        if (testChannel) {
-            testChannel.play(0.8, 1.0, 2.0, 5000);
-            console.log("▶ TestChannel.play chiamato su", audioFiles[testIndex]);
-        } else {
-            console.warn("❌ Nessun canale per indice", testIndex);
-        }
-    }
+    console.log("🎉 Audio pronto!");
 
     if (textEl) textEl.innerText = "Audio pronto!";
 
@@ -533,7 +525,6 @@ async function onAllAudioLoaded() {
         if (loadingDiv) loadingDiv.hide();
     }, 800);
 }
-
 
 async function btnPlay() {
     if (!audioReady) {
@@ -1111,13 +1102,13 @@ function mouseMoved(x, y)
     return -1;
 }
 
+/*
 function touchMoved() 
 {
     mouseMoved(touchX, touchY);
     return false; // evita lo scroll della pagina
 }
 
-/*
 function touchStarted() {
     let ctx = getAudioContext();
 
