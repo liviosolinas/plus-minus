@@ -240,9 +240,9 @@ function setup()
     // fileSound.play();
     
     mills = millis();
-    //noLoop(); //blocca il draw di sistema
     //Mydraw();//
     if (isDebug) console.log("\n=====END setup()======="); 
+    noLoop(); //blocca il draw di sistema
 }
 
 async function initAudio() {
@@ -781,7 +781,6 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
 
     let durataEvento = tempo * 1000;
     if(durataEvento < 10000 ) durataEvento = 10000;
-    if(isDebug) console.log("durataEvento=" , durataEvento);
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
         canPlay = true;
