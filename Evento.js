@@ -481,7 +481,7 @@ class Evento {
         return tempo;
     }
 
-    function playMusicItem(tempo, pag, iEvento, eventoPrec) 
+function playMusicItem(tempo, pag, iEvento, eventoPrec) 
 {
     console.log("IN: playMusicItem()");
 
