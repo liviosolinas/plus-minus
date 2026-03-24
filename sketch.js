@@ -470,7 +470,6 @@ async function initAudio() {
     await onAllAudioLoaded();
 
     console.log("🎉 Audio pronto!");
-    testBeep();
 }
 
 
