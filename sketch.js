@@ -458,6 +458,8 @@ async function initAudio() {
     if (window.audioCtx.state !== "running") {
         await window.audioCtx.resume();
     }
+    
+    if(audioReady) return;
 
     // MASTER GAIN
     window.masterGain = audioCtx.createGain();
