@@ -321,214 +321,76 @@ function draw()
 
 function Mydraw() 
 {
-    if (isDebug) console.log("\n=====Mydraw()======="); 
-    //background(128);
-    
-    let tempo = 0.0; 
-    pickGR1.clear();
-    color(0); 
-    stroke(0); 
-    if (keyPressed) 
-    { 
-        if (key == 'p' || key == 'P') 
-        { 
-            playSW = false; 
-        } 
-    } 
-    
-    //disegno della partitura
-    if (pag < dimPagine) {
-        if ((partitura.aPagina[pag].isLoaded)) //&& ( iEvento < partitura.aPagina[pag].numEventi ) )
-        { 
-            //TODO: controllare se e' un riquadro vuoto da aggiornare
-            //se l'evento e' un riquadro vuoto deve prendere quello marcato di una delle pagine precedenti o successive, in base alla freccia
-            //if ( isEventoVuoto( pag , iEvento ) )
-            //{
-            //  //print("\n\nisEventoVuoto( pag=" + pag + " , evento=" + iEvento +" ) TRUE");
-            //  int iPagina = pag;
-            //  if ( partitura.aPagina[pag].arrowRight == t_ArrowUpper.Precedente  ) //arrowLeft , arrowRight
-            //  {
-            //    if( iPagina > 0 )
-            //      iPagina--;
-            //    else
-            //      iPagina = dimPagine - 1;
-            //  }
-            //  else if ( partitura.aPagina[pag].arrowRight == t_ArrowUpper.Successivo  ) //arrowLeft , arrowRight
-            //  {
-            //    if( iPagina < dimPagine - 1 )
-            //      iPagina++;
-            //    else
-            //      iPagina = 0;
-            //  }
-            //  //partitura.aPagina[pag].aQuadrati[iEvento] 
-            //  //noLoop();
-            //  Evento eventoVuoto = PrendiEventoMarcato(iPagina);
-            //  //tempo = 0.0;
-            //  print("\n\nEventoVuoto( pag=" + (iPagina+1) + " , evento=" + eventoVuoto.n_evento +")");
-            //  eventoVuoto.Draw( iPagina + 1, eventoVuoto.n_evento );
-            //  eventoVuoto.Play( tempo , partitura.aPagina[iPagina].aCentralSound , partitura.aPagina[iPagina].aSecondaryNotes , null , false , partitura.aPagina[iPagina].aQuadrati[iEvento].centralSound.timbroCS );
-            //}
-            //else 
-            //{
-            //  //print("isEventoVuoto( pag=" + pag + " , evento=" + iEvento +" ) FALSE");
-            //}
-            partitura.aPagina[pag].aQuadrati[iEvento].Draw(pag + 1, partitura.aPagina[pag].aQuadrati[iEvento].n_evento); 
-            if (playSW) 
-            {
-                if (!canPlay) 
-                {
-                    noLoop(); //tempo = 0.0;
-                    if(isDebug) console.log("IN: playMusicItem");
-                    eventoPrec = playMusicItem(tempo, pag, iEvento, eventoPrec);
-                    if(isDebug) console.log("OUT: playMusicItem");
-                    // System.gc(); 
-                    // memoryUsage();
-                } 
-                else 
-                { 
-                    if(isDebug) console.log("<codice non usato>");
-                    /*
-                    let i = 0; 
-                    while (noteToPlay.size() > 0) 
-                    {
-                        if (i < noteToPlay.size()) 
-                        {
-                            if (millis() - mills > noteToPlay.get(i).tempo * 1000) 
-                            { 
-                                //if (isDebug) println("\nmillis()=" +millis() + " mills=" + mills + " noteToPlay.get(" + i + ").tempo=" + noteToPlay.get(i).tempo );
-                                noteToPlay.get(i).start(); //out.playNote( 1.25 + i*2.0, 0.3, new ThreadNote( 75, 0.49 ) );
-                                //millsLastNote = noteToPlay.get(i).tempo * 1000.0 + noteToPlay.get(i).duration * 1000.0;
-                                millsLastNote = noteToPlay.get(i).duration * 1000.0; //if (isDebug) println("\nmillsLastNote=" + millsLastNote );
-                                noteToPlay.remove(i);
-                            } 
-                            else 
-                            { 
-                                i++; 
-                            }
-                        } 
-                        else 
-                        { 
-                            i = 0; 
-                        }
-                    } 
-                    
-                    //</codice non usato>
-                    if (noteToPlay.size() == 0) 
-                    {
-                        millsLastNote = 0; //eliminato la durata dell'ultima nota
-                        if (isDebug) console.log("\nNOTE FINITE!"); //if ( partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroNoise == t_Timbre.Hard )
-                        //{
-                        //  if (isDebug) print( " timbroNoise=pause " + partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroNoise ); 
-                        gspHard.stop(); //}
-                        //if ( partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroNoise == t_Timbre.Soft )
-                        //{
-                        //if (isDebug) print( " timbroNoise=pause " + partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroNoise ); 
-                        gspSoft.stop(); //}
-                        //gestione della transizione tra evento e altro
-                        if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Long) 
-                        { 
-                            if (isDebug) 
-                                console.log("\ndelay(RestLong)=" + (RestLong + millsLastNote)); 
-                            delay(RestLong + millsLastNote); 
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Medium) 
-                        { 
-                            if (isDebug) 
-                                console.log("\ndelay(RestMedium)=" + (RestMedium + millsLastNote)); 
-                            delay(RestMedium + millsLastNote); 
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Short) 
-                        { 
-                            if (isDebug) 
-                                console.log("\ndelay(RestShort)=" + (RestShort + millsLastNote)); 
-                            delay(RestShort + millsLastNote); 
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.No) 
-                        { 
-                            if (isDebug) 
-                                console.log("\ndelay(No)=" + (RestNo + millsLastNote)); 
-                            delay(RestNo + millsLastNote); 
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsUntilMiddle) 
-                        { 
-                            //dura fino a circa la metà del seguente evento
-                            if (isDebug) console.log("\ndelay(LastsUntilMiddle)= " + (RestNo + millsLastNote)); 
-                            delay(RestNo + millsLastNote);
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsUntilEnd) 
-                        { 
-                            //dura fino alla fine del seguente evento
-                            if (isDebug) console.log("\ndelay(LastsUntilEnd)=" + (RestNo + millsLastNote)); 
-                            delay(RestNo + millsLastNote);
-                        } 
-                        else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsAsLong) 
-                        { //dura il piu' possibile ma deve fermarsi alla prossima pausa
-                            if (isDebug) console.log("\ndelay(LastsAsLong)=" + (RestNo + millsLastNote)); 
-                            delay(RestNo + millsLastNote);
-                        } 
-                        iEvento++; 
-                        if (iEvento >= dimQuadrati) 
-                        { 
-                            iEvento = 0; pag++; 
-                        } 
-                        if (pag >= dimPagine) 
-                        { 
-                            pag = 0; 
-                            noLoop(); 
-                        }                         
-                    }
-                    */
+    if (isDebug) console.log("\n=====Mydraw()=======");
 
-                    // //avanzamento al successivo ideogramma
-                    // iEvento++; 
-                    // if (iEvento >= dimQuadrati) 
-                    // { 
-                    //     iEvento = 0; 
-                    //     pag++; 
-                    // } 
-                    // if (pag >= dimPagine) 
-                    // { 
-                    //     pag = 0; 
-                    //     noLoop(); 
-                    // }
-                    // else
-                    // {
-                    //     loop();
-                    // }
-                    canPlay = false;
-                }
-            } //partitura.aPagina[pag].aQuadrati[iEvento].Play( partitura.aPagina[pag].aCentralSound , partitura.aPagina[pag].aSecondaryNotes );
-        } 
-        if (keyPressed) 
-        { 
-            if (key == 'p' || key == 'P') 
-            { 
-                playSW = false; 
-            } 
-        }
-    } 
-    else 
-    { 
-        exit(); 
-    } 
-    //print(iEvento);
-    //bottone di play
-    update(mouseX, mouseY);  
-    rect(playX, playY, playSize, playSize); //GUI
-    /*
-    for (let i = 0; i < NUM; i++) 
-        tboxes[i].display(); 
-    textFont(f, 12); 
-    textAlign(RIGHT); 
-    //text("Scheda Audio:", txt_schedaX - 1, txt_schedaY + 15); 
-    btn_scheda.display(); 
-    */
+    // Disegno grafico
+    pickGR1.clear();
     color(0);
-    //Mydraw();//
-    //noLoop(); 
+    stroke(0);
+
+    // Se non stiamo suonando → disegna e basta
+    if (!playSW) {
+        drawCurrentEvent();
+        return;
+    }
+
+    // Se la pagina non è valida → stop
+    if (pag >= dimPagine) {
+        console.log("🎵 Fine partitura");
+        playSW = false;
+        return;
+    }
+
+    // Se la pagina è caricata
+    if (partitura.aPagina[pag].isLoaded) {
+
+        // Disegna l’evento corrente
+        drawCurrentEvent();
+
+        // Suona l’evento corrente
+        let evento = partitura.aPagina[pag].aQuadrati[iEvento];
+        let tempo = 0.0;
+
+        if (isDebug) console.log("IN: playMusicItem");
+        eventoPrec = playMusicItem(tempo, pag, iEvento, eventoPrec);
+        if (isDebug) console.log("OUT: playMusicItem");
+
+        // Calcola la durata dell’evento (in secondi)
+        let durataEvento = evento.centralSound.duration;
+        if (!durataEvento || durataEvento <= 0) durataEvento = 0.5;
+
+        // Avanza al prossimo evento
+        iEvento++;
+        if (iEvento >= dimQuadrati) {
+            iEvento = 0;
+            pag++;
+        }
+
+        // Se abbiamo finito tutte le pagine → stop
+        if (pag >= dimPagine) {
+            console.log("🎵 Fine partitura");
+            playSW = false;
+            return;
+        }
+
+        // Pianifica il prossimo Mydraw()
+        setTimeout(Mydraw, durataEvento * 1000);
+    }
+
+    // GUI
+    update(mouseX, mouseY);
+    rect(playX, playY, playSize, playSize);
+}
+function drawCurrentEvent() {
+    if (pag < dimPagine) {
+        let evento = partitura.aPagina[pag].aQuadrati[iEvento];
+        evento.Draw(pag + 1, evento.n_evento);
+    }
 }
 
+
 async function btnPlay() {
+    /*
     if (!window.audioCtx) {
         console.log("🔧 Inizializzo audio da btnPlay");
         initAudio();
@@ -543,7 +405,7 @@ async function btnPlay() {
     if (window.audioCtx.state !== "running") {
         await window.audioCtx.resume();
     }
-
+    */
     playSW = !playSW;
     Mydraw();
 }
