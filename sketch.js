@@ -322,7 +322,7 @@ function draw()
 
 function Mydraw() 
 {
-    if (isDebug) console.log("\n=====Mydraw()=======");
+    if (isDebug) console.trace("\n=====Mydraw()=======");
 
     // Disegno grafico
     pickGR1.clear();
