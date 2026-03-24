@@ -81,7 +81,7 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
 
     // --- SUONA LA NOTA CON IL NUOVO MOTORE WEB AUDIO ---
     channel.play({
-        startTime: 0,
+        startTime: tempo,
         offset: 0,
         duration: duration,   // secondi
         gain: volume,
