@@ -1,7 +1,7 @@
-let window.audioCtx = null;
-let window.masterGain = null;
-let window.channels = [];
-let window.audioReady = false;
+window.audioCtx = null;
+window.masterGain = null;
+window.channels = [];
+window.audioReady = false;
 
 const NUM_FILES = 110;      // sound0.mp3 ... sound109.mp3
 const VOICES_PER_CHANNEL = 32;
