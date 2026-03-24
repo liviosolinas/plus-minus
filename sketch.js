@@ -16,7 +16,7 @@ let pag = 0, iEvento = 0;
 let isSound = true;
 let tempo = 1.0;
 let croma = (1000 / tempo), accic = (300 / tempo), cluster = 0, tremSing = (9 / tempo), trem = (10 / tempo), tremoloItem = (6 / tempo), fineTremolo = - 100;
-let durTriangolo = (1000 / tempo), durDiamante = (2500 / tempo), durPalla = (4000 / tempo); 
+let durTriangolo = (1500 / tempo), durDiamante = (4000 / tempo), durPalla = (9000 / tempo); 
 let bufferSize = 512; //USER INTERFACE
 //static let NUM = 2; 
 let NUM = 2; 
