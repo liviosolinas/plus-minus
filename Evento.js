@@ -575,8 +575,8 @@ class Evento {
             if (gspHard && gspSoft) 
             {
                 // Ferma sempre tutto prima
-                //gspHard.stop();
-                //gspSoft.stop();
+                gspHard.stop();
+                gspSoft.stop();
     
                 if (this.centralSound.timbroNoise == t_Timbre.Hard) 
                 {
@@ -602,7 +602,7 @@ class Evento {
                         )
                     );
     
-                    //gspHard.start();
+                    gspHard.start();
                 }
                 else if (this.centralSound.timbroNoise == t_Timbre.Soft) 
                 {
@@ -633,8 +633,8 @@ class Evento {
                 else 
                 {
                     // Nessun timbro Noise: granulari fermi
-                    //gspHard.stop();
-                    //gspSoft.stop();
+                    gspHard.stop();
+                    gspSoft.stop();
                 }
             }
         }
