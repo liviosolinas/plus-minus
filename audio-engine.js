@@ -40,13 +40,18 @@ class Voice {
         this.filter = ctx.createBiquadFilter();
         this.filter.type = "lowpass";
 
+        // 🔧 Forza routing stereo
+        this.gain.channelCount = 2;
+        this.filter.channelCount = 2;
+        masterGain.channelCount = 2;
+
+        this.gain.channelInterpretation = "speakers";
+        this.filter.channelInterpretation = "speakers";
+        masterGain.channelInterpretation = "speakers";
+
         this.gain.connect(this.filter);
         this.filter.connect(masterGain);
 
-        if(isDebug)
-        {
-            //console.log("VOICE MASTERGAIN:", masterGain);
-        }
         this.busy = false;
     }
 
