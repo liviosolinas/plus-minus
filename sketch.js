@@ -294,17 +294,14 @@ async function loadAllAudio() {
     onAllAudioLoaded();
 }
 
-async function onAllAudioLoaded() {
+function onAllAudioLoaded() {
     console.log("🎉 Tutti i file WebAudio caricati!");
 
-    // Nascondi barra
-    document.getElementById("loading-container").style.display = "none";
+    // Nascondi overlay
+    document.getElementById("loading-overlay").style.display = "none";
 
     // Sblocca motore musicale
     window.audioReady = true;
-
-    // per far partire subito la musica:
-    // startMusic();
 }
 
 function updateLoadingBar(current, total) {
