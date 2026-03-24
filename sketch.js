@@ -937,6 +937,13 @@ function update(x, y)
 function mousePressed() 
 {
     let ctx = getAudioContext();
+
+     // 0. Se NON esiste ancora l'AudioContext → primo click → inizializza
+    if (!ctx) {
+        console.log("🔧 Creo AudioContext al primo click");
+        initAudio();
+        return;
+    }
     if (ctx.state !== "running") 
     {
         ctx.resume().then(() => 
@@ -1150,6 +1157,13 @@ function touchMoved()
 
 function touchStarted() {
     let ctx = getAudioContext();
+
+     // 0. Se NON esiste ancora l'AudioContext → primo click → inizializza
+    if (!ctx) {
+        console.log("🔧 Creo AudioContext al primo click");
+        initAudio();
+        return;
+    }
     if (ctx.state !== "running") {
         ctx.resume().then(() => {
             console.log("AudioContext attivato da touch");
