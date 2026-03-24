@@ -129,17 +129,18 @@ class AudioChannel {
         return this.voices[0];
     }
 
-    play(options = {}) {
+   play(options = {}) 
+    {
         if (!this.loaded || !this.buffer) return;
-
+    
         const {
-            startTime = 0,
+            startTime = this.context.currentTime,   // 🔥 parte nel futuro
             offset = 0,
-            duration = null,
+            duration = null,                        // 🔥 puoi passare durata
             gain = 1.0,
             playbackRate = 1.0
         } = options;
-
+    
         const voice = this.getFreeVoice();
         voice.play(startTime, offset, duration, gain, playbackRate);
     }
