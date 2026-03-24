@@ -841,6 +841,7 @@ function update(x, y)
 
 async function mousePressed() 
 {  
+    /*
      // 1️⃣ Se l’audio non è ancora inizializzato → inizializzalo e STOP
     if (!window.audioCtx || !window.audioReady) {
         initAudio();
@@ -885,15 +886,11 @@ async function mousePressed()
     else 
     { 
         //possibile configurare
-        /*
-        if (btn_scheda.pressed) 
-        { 
-            console.log("CONFIG SCHEDA"); 
-        }
-        */
+        
     } 
     //if(playSW) playMusic();
     Mydraw();//loop();
+    */
 } 
 
 function evidenziaRiga(index) {
