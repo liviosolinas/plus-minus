@@ -5,7 +5,6 @@ window.channels = [];
 let TOTAL_FILES = 110;
 let filesLoaded = 0;
 
-
 let audioInitialized = false;
 let TIPO_ESECUZIONE_MIDI = "MIDI";
 let TIPO_ESECUZIONE_FILES = "FILES";
