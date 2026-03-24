@@ -29,6 +29,31 @@ async function loadSample(url, retries = 3, delayMs = 200) {
 //        VOICE
 // =========================
 class Voice {
+    constructor(ctx, masterGain, url) {
+        this.url = url;     // URL del file audio (es: "./data/sound50.mp3")
+        this.busy = false;
+    }
+
+    play(buffer, volume, pitch, duration, filterFreq) {
+        this.busy = true;
+
+        const a = new Audio(this.url);
+
+        // volume
+        a.volume = volume;
+
+        // pitch (playbackRate)
+        a.playbackRate = pitch;
+
+        // suona
+        a.play();
+
+        // quando finisce, libera la voce
+        setTimeout(() => {
+            this.busy = false;
+        }, duration * 1000);
+    }
+    /*
     constructor(ctx, masterGain) {
         this.ctx = ctx;
         this.busy = false;
@@ -66,6 +91,7 @@ class Voice {
             this.busy = false;
         };
     }
+    */
 }
 
 
@@ -74,29 +100,23 @@ class Voice {
 //     AUDIO CHANNEL
 // =========================
 class AudioChannel {
-    constructor(ctx, buffer, masterGain, voicesCount = 32) {
-        this.ctx = ctx;
-        this.buffer = buffer;
-        this.masterGain = masterGain;
+    constructor(url, voicesCount = 32) {
+        this.url = url;
         this.voices = [];
 
-        if (!this.masterGain._connectedToDestination) {
-            this.masterGain.connect(ctx.destination);
-            this.masterGain._connectedToDestination = true; // flag opzionale per non riconnettere
-        }
-        
         for (let i = 0; i < voicesCount; i++) {
-            this.voices.push(new Voice(ctx, masterGain));
+            this.voices.push(new Voice(url));
         }
     }
 
     play(volume, pitch, duration, filterFreq) {
         for (let v of this.voices) {
             if (!v.busy) {
-                v.play(this.buffer, volume, pitch, duration, filterFreq);
+                v.play(null, volume, pitch, duration, filterFreq);
                 return;
             }
         }
         console.warn("⚠️ Tutte le voci occupate!");
     }
 }
+
