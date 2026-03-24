@@ -87,59 +87,66 @@ class Voice {
 //     AUDIO CHANNEL
 // =========================
 class AudioChannel {
-  constructor(ctx, url, maxVoices, outputNode) {
-    this.ctx = ctx;
-    this.url = url;
-    this.maxVoices = maxVoices;
-    this.outputNode = outputNode;
+    constructor(ctx, url, maxVoices, outputNode) {
+        this.ctx = ctx;
+        this.url = url;
+        this.maxVoices = maxVoices;
+        this.outputNode = outputNode;
 
-    this.buffer = null;
-    this.voices = [];
-    this.loaded = false;
-  }
-
-  async load() {
-    const response = await fetch(this.url);
-    const arrayBuffer = await response.arrayBuffer();
-    this.buffer = await this.ctx.decodeAudioData(arrayBuffer);
-
-    // Crea pool di voci che condividono lo stesso buffer
-    this.voices = [];
-    for (let i = 0; i < this.maxVoices; i++) {
-      this.voices.push(new Voice(this.ctx, this.buffer, this.outputNode));
+        this.buffer = null;
+        this.voices = [];
+        this.loaded = false;
     }
 
-    this.loaded = true;
-    console.log(`✅ Caricato ${this.url} con ${this.maxVoices} voci`);
-  }
+    async load() {
+        try {
+            // Scarica il file audio
+            const response = await fetch(this.url);
+            const arrayBuffer = await response.arrayBuffer();
 
-  getFreeVoice() {
-    // Cerca una voce non in uso
-    for (const v of this.voices) {
-      if (!v.isPlaying) return v;
+            // Decodifica in AudioBuffer
+            this.buffer = await this.ctx.decodeAudioData(arrayBuffer);
+
+            // Crea il pool di voci
+            this.voices = [];
+            for (let i = 0; i < this.maxVoices; i++) {
+                this.voices.push(new Voice(this.ctx, this.buffer, this.outputNode));
+            }
+
+            this.loaded = true;
+            console.log(`🎧 Caricato ${this.url} con ${this.maxVoices} voci`);
+
+        } catch (err) {
+            console.error(`❌ Errore nel caricamento di ${this.url}:`, err);
+        }
     }
-    // Se tutte occupate, riusa la prima (o implementa una politica diversa)
-    return this.voices[0];
-  }
 
-  play(options = {}) {
-    if (!this.loaded || !this.buffer) return;
-
-    const {
-      startTime = 0,
-      offset = 0,
-      duration = null,
-      gain = 1.0,
-      playbackRate = 1.0
-    } = options;
-
-    const voice = this.getFreeVoice();
-    voice.play(startTime, offset, duration, gain, playbackRate);
-  }
-
-  stopAll() {
-    for (const v of this.voices) {
-      v.stop();
+    getFreeVoice() {
+        for (const v of this.voices) {
+            if (!v.isPlaying) return v;
+        }
+        // Se tutte occupate, riusa la prima
+        return this.voices[0];
     }
-  }
+
+    play(options = {}) {
+        if (!this.loaded || !this.buffer) return;
+
+        const {
+            startTime = 0,
+            offset = 0,
+            duration = null,
+            gain = 1.0,
+            playbackRate = 1.0
+        } = options;
+
+        const voice = this.getFreeVoice();
+        voice.play(startTime, offset, duration, gain, playbackRate);
+    }
+
+    stopAll() {
+        for (const v of this.voices) {
+            v.stop();
+        }
+    }
 }
