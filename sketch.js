@@ -2,7 +2,9 @@ window.audioCtx = null;
 window.masterGain = null;
 window.channels = [];
 
-let TOTAL_FILES = 110;
+const NUM_FILES = 110;      // sound0.mp3 ... sound109.mp3
+const VOICES_PER_CHANNEL = 32;
+
 let filesLoaded = 0;
 
 let audioInitialized = false;
@@ -493,36 +495,46 @@ async function initAudio() {
     console.log("🎉 initAudio() pronto!");
 }
 
+async function loadAllAudio() {
+    console.log("🔧 Precarico i 110 file WebAudio...");
 
-async function onAllAudioLoaded() {
-    console.log("🔧 Precarico i file audio HTMLAudio...");
+    const promises = [];
 
-    const barEl  = document.getElementById("loading-bar");
-    const textEl = document.getElementById("loading-text");
-
-    window.channels = [];
-
-    for (let i = 0; i < TOTAL_FILES; i++) {
-
+    for (let i = 0; i < NUM_FILES; i++) {
         const url = `./data/sound${i}.mp3`;
 
-        // Precarica il file
-        const audio = new Audio(url);
-        audio.preload = "auto";
-        audio.load();
-
-        // Crea il canale con 32 voci
-        window.channels[i] = new AudioChannel(url, 32);
+        const ch = new AudioChannel(audioCtx, url, VOICES_PER_CHANNEL, masterGain);
+        channels[i] = ch;
 
         // Aggiorna barra
-        const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
-        if (barEl)  barEl.style.width = perc + "%";
-        if (textEl) textEl.innerText = `Caricamento audio... ${perc}%`;
+        updateLoadingBar(i + 1, NUM_FILES);
+
+        promises.push(ch.load());
     }
 
-    console.log("🎉 Audio HTMLAudio pronto! Attendi il click dell’utente.");
+    await Promise.all(promises);
 
-    audioReady = true;
+    onAllAudioLoaded();
+}
+
+
+async function onAllAudioLoaded() {
+    console.log("🎉 Tutti i file WebAudio caricati!");
+
+    // Nascondi barra
+    document.getElementById("loading-container").style.display = "none";
+
+    // Sblocca motore musicale
+    window.audioReady = true;
+
+    // per far partire subito la musica:
+    // startMusic();
+}
+
+function updateLoadingBar(current, total) {
+    const perc = Math.round((current / total) * 100);
+    document.getElementById("loading-bar").style.width = perc + "%";
+    document.getElementById("loading-text").innerText = `Caricamento audio... ${perc}%`;
 }
 
 
