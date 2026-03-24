@@ -230,8 +230,6 @@ function setup()
     partitura = new Partitura();
     // AudioPlayer test;
     
-
-    
     background(255);
     
     // Esempio di gestione file audio (commentato)
@@ -244,6 +242,75 @@ function setup()
     //noLoop(); //blocca il draw di sistema
     //Mydraw();//
     if (isDebug) console.log("\n=====END setup()======="); 
+}
+
+async function initAudio() {
+    console.log("🎵 Inizializzo l’audio...");
+    if(audioReady) return;
+    
+    // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
+    if (!window.audioCtx || window.audioCtx.state === "closed") {
+        window.audioCtx = new AudioContext();
+    }
+
+    if (window.audioCtx.state !== "running") {
+        await window.audioCtx.resume();
+    }
+    
+    // MASTER GAIN
+    window.masterGain = audioCtx.createGain();
+    window.masterGain.gain.value = 1.0;
+    window.masterGain.connect(audioCtx.destination);
+
+    //createAudioChannels(window.masterGain);
+    
+    audioFiles = [];
+    for (let i = 0; i < TOTAL_FILES; i++) {
+        audioFiles[i] = `./data/sound${i}.mp3`;
+    }
+
+    // Carica tutti i file
+    await onAllAudioLoaded();
+
+    console.log("🎉 initAudio() pronto!");
+}
+
+async function loadAllAudio() {
+    console.log("🔧 Precarico i 110 file WebAudio...");
+
+    for (let i = 0; i < NUM_FILES; i++) {
+        const url = `./data/sound${i}.mp3`;
+
+        const ch = new AudioChannel(audioCtx, url, VOICES_PER_CHANNEL, masterGain);
+        channels[i] = ch;
+
+        // ⭐ Aspetta che il file sia caricato
+        await ch.load();
+
+        // ⭐ SOLO ORA aggiorna la barra
+        updateLoadingBar(i + 1, NUM_FILES);
+    }
+
+    onAllAudioLoaded();
+}
+
+async function onAllAudioLoaded() {
+    console.log("🎉 Tutti i file WebAudio caricati!");
+
+    // Nascondi barra
+    document.getElementById("loading-container").style.display = "none";
+
+    // Sblocca motore musicale
+    window.audioReady = true;
+
+    // per far partire subito la musica:
+    // startMusic();
+}
+
+function updateLoadingBar(current, total) {
+    const perc = Math.round((current / total) * 100);
+    document.getElementById("loading-bar").style.width = perc + "%";
+    document.getElementById("loading-text").innerText = `Caricamento audio... ${perc}%`;
 }
 
 
@@ -463,80 +530,6 @@ function Mydraw()
     //Mydraw();//
     //noLoop(); 
 }
-
-async function initAudio() {
-    console.log("🎵 Inizializzo l’audio...");
-    if(audioReady) return;
-    
-    // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
-    if (!window.audioCtx || window.audioCtx.state === "closed") {
-        window.audioCtx = new AudioContext();
-    }
-
-    if (window.audioCtx.state !== "running") {
-        await window.audioCtx.resume();
-    }
-    
-    // MASTER GAIN
-    window.masterGain = audioCtx.createGain();
-    window.masterGain.gain.value = 1.0;
-    window.masterGain.connect(audioCtx.destination);
-
-    //createAudioChannels(window.masterGain);
-    
-    audioFiles = [];
-    for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = `./data/sound${i}.mp3`;
-    }
-
-    // Carica tutti i file
-    await onAllAudioLoaded();
-
-    console.log("🎉 initAudio() pronto!");
-}
-
-async function loadAllAudio() {
-    console.log("🔧 Precarico i 110 file WebAudio...");
-
-    const promises = [];
-
-    for (let i = 0; i < NUM_FILES; i++) {
-        const url = `./data/sound${i}.mp3`;
-
-        const ch = new AudioChannel(audioCtx, url, VOICES_PER_CHANNEL, masterGain);
-        channels[i] = ch;
-
-        // Aggiorna barra
-        updateLoadingBar(i + 1, NUM_FILES);
-
-        promises.push(ch.load());
-    }
-
-    await Promise.all(promises);
-
-    onAllAudioLoaded();
-}
-
-
-async function onAllAudioLoaded() {
-    console.log("🎉 Tutti i file WebAudio caricati!");
-
-    // Nascondi barra
-    document.getElementById("loading-container").style.display = "none";
-
-    // Sblocca motore musicale
-    window.audioReady = true;
-
-    // per far partire subito la musica:
-    // startMusic();
-}
-
-function updateLoadingBar(current, total) {
-    const perc = Math.round((current / total) * 100);
-    document.getElementById("loading-bar").style.width = perc + "%";
-    document.getElementById("loading-text").innerText = `Caricamento audio... ${perc}%`;
-}
-
 
 async function btnPlay() {
     if (!window.audioCtx) {
