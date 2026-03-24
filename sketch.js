@@ -465,7 +465,7 @@ async function initAudio() {
     window.masterGain.gain.value = 1.0;
     window.masterGain.connect(audioCtx.destination);
 
-    createAudioChannels(window.masterGain);
+    //createAudioChannels(window.masterGain);
     
     audioFiles = [];
     for (let i = 0; i < TOTAL_FILES; i++) {
