@@ -108,6 +108,7 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
     const channel = channels[notaIndex];
 
     // --- TIMBRO → filtro + volume ---
+    volume = 0.9;
     let filterFreq = 2000; // più aperto
 
     if (timbro === t_Timbre.Hard) {
@@ -140,7 +141,8 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
     const pitch = 1.0;
 
     // --- SUONA LA NOTA CON IL NUOVO MOTORE AUDIO ---
-    //channel.play(volume, pitch, duration, filterFreq);
+    channel.play(volume, pitch, duration, filterFreq);
+    /*
     channel.play(
         channel.buffer,   // il buffer corretto
         volume,
@@ -148,7 +150,7 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
         duration,
         filterFreq
     );
-
+    */
 
     console.log("\tstop nota>");
 }
