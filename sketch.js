@@ -490,10 +490,10 @@ async function onAllAudioLoaded() {
     for (let i = 0; i < TOTAL_FILES; i++) {
         const buffer = await loadSample(audioFiles[i]);
         window.channels[i] = new AudioChannel(
-            window.audioCtx,      // ✅ ctx giusto
-            buffer,               // ✅ buffer giusto
-            window.masterGain,    // ✅ masterGain giusto
-            32
+            window.audioCtx,      // ctx corretto
+            buffer,               // buffer corretto
+            window.masterGain,    // masterGain corretto
+            32                    // numero di voci
         );
 
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
