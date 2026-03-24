@@ -468,7 +468,9 @@ async function initAudio() {
     audioInitialized = true;
     audioReady = false;
 
-    for (let i = 0; i < TOTAL_FILES; i++) {
+    let i = 0;
+    audioFiles[i] = './data/sound' + i + '.wav';
+    for (let i = 1; i < TOTAL_FILES; i++) {
         audioFiles[i] = './data/sound' + i + '.aiff';
     }
 
