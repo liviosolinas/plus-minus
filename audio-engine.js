@@ -57,7 +57,7 @@ class Voice {
         this.filter.frequency.setValueAtTime(filterFreq, now);
 
         this.gain.gain.cancelScheduledValues(now);
-        this.gain.gain.setValueAtTime(volume, now);
+        //this.gain.gain.setValueAtTime(volume, now);
 
         src.start(now);
         src.stop(now + duration);
