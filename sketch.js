@@ -465,6 +465,12 @@ async function initAudio() {
     masterGain.gain.value = 1.0;
     masterGain.connect(audioCtx.destination);
 
+
+    audioFiles = [];
+    for (let i = 0; i < TOTAL_FILES; i++) {
+        audioFiles[i] = `./data/sound${i}.mp3`;
+    }
+
     // Carica tutti i file
     await onAllAudioLoaded();
 
