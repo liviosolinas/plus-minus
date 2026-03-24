@@ -1117,6 +1117,7 @@ function touchMoved()
     return false; // evita lo scroll della pagina
 }
 
+/*
 function touchStarted() {
     let ctx = getAudioContext();
 
@@ -1135,7 +1136,7 @@ function touchStarted() {
         });
     }
 }
-
+*/
 
 
 function boxHasBlack(x, y, w, h)
