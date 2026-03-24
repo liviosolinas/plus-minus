@@ -469,7 +469,7 @@ async function initAudio() {
     audioReady = false;
 
     for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = './data/sound' + i + '.mp3';
+        audioFiles[i] = './data/sound' + i + '.aiff';
     }
 
     onAllAudioLoaded();  // <-- qui il masterGain ESISTE già
