@@ -140,7 +140,15 @@ function playNoteWithParams(tempo, duration, notaIndex, volume, timbro, articula
     const pitch = 1.0;
 
     // --- SUONA LA NOTA CON IL NUOVO MOTORE AUDIO ---
-    channel.play(volume, pitch, duration, filterFreq);
+    //channel.play(volume, pitch, duration, filterFreq);
+    channel.play(
+        channel.buffer,   // il buffer corretto
+        volume,
+        pitch,
+        duration,
+        filterFreq
+    );
+
 
     console.log("\tstop nota>");
 }
