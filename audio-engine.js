@@ -80,6 +80,11 @@ class AudioChannel {
         this.masterGain = masterGain;
         this.voices = [];
 
+        if (!this.masterGain._connectedToDestination) {
+            this.masterGain.connect(ctx.destination);
+            this.masterGain._connectedToDestination = true; // flag opzionale per non riconnettere
+        }
+        
         for (let i = 0; i < voicesCount; i++) {
             this.voices.push(new Voice(ctx, masterGain));
         }
