@@ -456,10 +456,8 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    // 1. Crea AudioContext SOLO se non esiste
-    if (!window.audioCtx) {
-        window.audioCtx = new AudioContext();
-    }
+    // 1. Usa SEMPRE il contesto di p5.js
+    window.audioCtx = getAudioContext();
     await window.audioCtx.resume();
 
     // 2. Crea masterGain SOLO se non esiste
@@ -473,11 +471,12 @@ async function initAudio() {
     audioReady = false;
 
     for (let i = 0; i < TOTAL_FILES; i++) {
-        audioFiles[i] = './data/sound' + i + '.mp3'; // o .wav
+        audioFiles[i] = './data/sound' + i + '.mp3';
     }
 
-    await onAllAudioLoaded();  // aspettiamo davvero il caricamento
+    await onAllAudioLoaded();
 }
+
 
 async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
