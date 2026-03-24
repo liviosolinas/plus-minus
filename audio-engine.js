@@ -3,19 +3,6 @@ function getAudioContext() {
     return window.audioCtx;
 }
 
-async function loadSample(url, retries = 3) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const res = await fetch(url);
-            const arrayBuffer = await res.arrayBuffer();
-            return await window.audioCtx.decodeAudioData(arrayBuffer);
-        } catch (err) {
-            console.warn(`Errore caricando ${url} (tentativo ${i+1}):`, err);
-        }
-    }
-    throw new Error(`Impossibile caricare ${url} dopo ${retries} tentativi`);
-}
-
 async function loadSample(url, retries = 3, delayMs = 200) {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
@@ -23,7 +10,7 @@ async function loadSample(url, retries = 3, delayMs = 200) {
             if (!response.ok) throw new Error("HTTP " + response.status);
 
             const arrayBuffer = await response.arrayBuffer();
-            return await getAudioContext().decodeAudioData(arrayBuffer);
+            return await window.audioCtx.decodeAudioData(arrayBuffer);
 
         } catch (err) {
             console.warn(`Errore caricando ${url} (tentativo ${attempt}):`, err);
@@ -32,12 +19,10 @@ async function loadSample(url, retries = 3, delayMs = 200) {
                 throw new Error(`Impossibile caricare ${url} dopo ${retries} tentativi`);
             }
 
-            // attesa prima del retry
             await new Promise(res => setTimeout(res, delayMs));
         }
     }
-}   //  <--- QUESTA CHIUDE LA FUNZIONE loadSample
-
+}
 
 
 // =========================
