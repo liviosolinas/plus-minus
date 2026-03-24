@@ -502,7 +502,7 @@ function keyTyped()
     //else if (k == DELETE) tbox.txt = ""; 
     //else if (k >= ' ') tbox.txt += str(k);
 
-    Mydraw();//loop();     
+    //Mydraw();//loop();     
 }
 
 function keyPressed() 
