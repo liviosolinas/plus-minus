@@ -480,7 +480,7 @@ async function initAudio() {
 
 
 async function onAllAudioLoaded() {
-    console.log("🔧 Inizializzo i canali audio (HTMLAudio)...");
+    console.log("🔧 Precarico i file audio HTMLAudio...");
 
     const barEl  = document.getElementById("loading-bar");
     const textEl = document.getElementById("loading-text");
@@ -489,30 +489,27 @@ async function onAllAudioLoaded() {
 
     for (let i = 0; i < TOTAL_FILES; i++) {
 
-        // 1️⃣ URL del file audio
         const url = `./data/sound${i}.mp3`;
 
-        // 2️⃣ Crea il canale usando SOLO l’URL
-        window.channels[i] = new AudioChannel(url, 32);        
+        // Precarica il file
+        const audio = new Audio(url);
+        audio.preload = "auto";
+        audio.load();
 
-        // 3️⃣ Aggiorna la barra
+        // Crea il canale con 32 voci
+        window.channels[i] = new AudioChannel(url, 32);
+
+        // Aggiorna barra
         const perc = Math.round(((i + 1) / TOTAL_FILES) * 100);
         if (barEl)  barEl.style.width = perc + "%";
         if (textEl) textEl.innerText = `Caricamento audio... ${perc}%`;
     }
 
-    eventoPrec = new Evento();
-    await setupMusic();
+    console.log("🎉 Audio HTMLAudio pronto! Attendi il click dell’utente.");
 
     audioReady = true;
-    console.log("🎉 Audio pronto!");
-
-    if (textEl) textEl.innerText = "Audio pronto!";
-
-    setTimeout(() => {
-        if (loadingDiv) loadingDiv.hide();
-    }, 800);
 }
+
 
 async function btnPlay() {
     if (!window.audioCtx) {
