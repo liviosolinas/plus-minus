@@ -68,6 +68,6 @@ class GranularSamplePlayer {
         gainNode.connect(this.outputGain);
 
         grain.start(this.context.currentTime, startTime, grainSize);
-        grain.stop(this.context.currentTime + grainSize);
+        //grain.stop(this.context.currentTime + grainSize);
     }
 }
