@@ -29,36 +29,56 @@ async function loadSample(url, retries = 3, delayMs = 200) {
 //        VOICE
 // =========================
 class Voice {
-    constructor(url) {
-        this.audio = new Audio(url);   // Precaricato una volta sola
-        this.audio.preload = "auto";
-        this.busy = false;
+  constructor(ctx, buffer, outputNode) {
+    this.ctx = ctx;
+    this.buffer = buffer;
+    this.outputNode = outputNode;
 
-        // Quando finisce, libera la voce
-        this.audio.addEventListener("ended", () => {
-            this.busy = false;
-        });
+    this.source = null;
+    this.gainNode = null;
+    this.isPlaying = false;
+  }
+
+  play(startTime = 0, offset = 0, duration = null, gain = 1.0, playbackRate = 1.0) {
+    if (!this.buffer) return;
+
+    const ctx = this.ctx;
+
+    this.source = ctx.createBufferSource();
+    this.source.buffer = this.buffer;
+    this.source.playbackRate.value = playbackRate;
+
+    this.gainNode = ctx.createGain();
+    this.gainNode.gain.value = gain;
+
+    this.source.connect(this.gainNode);
+    this.gainNode.connect(this.outputNode);
+
+    const when = ctx.currentTime + startTime;
+
+    if (duration != null) {
+      this.source.start(when, offset, duration);
+    } else {
+      this.source.start(when, offset);
     }
 
-    play(buffer, volume, pitch, duration, filterFreq) {
-        if (this.busy) return;
+    this.isPlaying = true;
 
-        this.busy = true;
+    this.source.onended = () => {
+      this.isPlaying = false;
+      this.source.disconnect();
+      this.gainNode.disconnect();
+      this.source = null;
+      this.gainNode = null;
+    };
+  }
 
-        this.audio.currentTime = 0;    // Riparte dall’inizio
-        this.audio.volume = volume;
-        this.audio.playbackRate = pitch;
-
-        this.audio.play().catch(err => {
-            console.warn("Audio play() error:", err);
-            this.busy = false;
-        });
-
-        // Fallback: libera la voce dopo la durata
-        setTimeout(() => {
-            this.busy = false;
-        }, duration * 1000);
+  stop() {
+    if (this.source && this.isPlaying) {
+      this.source.stop();
+      this.isPlaying = false;
     }
+  }
 }
 
 
@@ -67,22 +87,59 @@ class Voice {
 //     AUDIO CHANNEL
 // =========================
 class AudioChannel {
-    constructor(url, voicesCount = 32) {
-        this.url = url;
-        this.voices = [];
+  constructor(ctx, url, maxVoices, outputNode) {
+    this.ctx = ctx;
+    this.url = url;
+    this.maxVoices = maxVoices;
+    this.outputNode = outputNode;
 
-        for (let i = 0; i < voicesCount; i++) {
-            this.voices.push(new Voice(url));
-        }
+    this.buffer = null;
+    this.voices = [];
+    this.loaded = false;
+  }
+
+  async load() {
+    const response = await fetch(this.url);
+    const arrayBuffer = await response.arrayBuffer();
+    this.buffer = await this.ctx.decodeAudioData(arrayBuffer);
+
+    // Crea pool di voci che condividono lo stesso buffer
+    this.voices = [];
+    for (let i = 0; i < this.maxVoices; i++) {
+      this.voices.push(new Voice(this.ctx, this.buffer, this.outputNode));
     }
 
-    play(volume, pitch, duration, filterFreq) {
-        for (let v of this.voices) {
-            if (!v.busy) {
-                v.play(null, volume, pitch, duration, filterFreq);
-                return;
-            }
-        }
-        console.warn("⚠️ Tutte le voci occupate per", this.url);
+    this.loaded = true;
+    console.log(`✅ Caricato ${this.url} con ${this.maxVoices} voci`);
+  }
+
+  getFreeVoice() {
+    // Cerca una voce non in uso
+    for (const v of this.voices) {
+      if (!v.isPlaying) return v;
     }
+    // Se tutte occupate, riusa la prima (o implementa una politica diversa)
+    return this.voices[0];
+  }
+
+  play(options = {}) {
+    if (!this.loaded || !this.buffer) return;
+
+    const {
+      startTime = 0,
+      offset = 0,
+      duration = null,
+      gain = 1.0,
+      playbackRate = 1.0
+    } = options;
+
+    const voice = this.getFreeVoice();
+    voice.play(startTime, offset, duration, gain, playbackRate);
+  }
+
+  stopAll() {
+    for (const v of this.voices) {
+      v.stop();
+    }
+  }
 }
