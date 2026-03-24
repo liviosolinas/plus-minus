@@ -455,54 +455,33 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    if (!window.audioCtx) {
-        window.audioCtx = new AudioContext();
-    }
-    
-    // 1. Ottieni SEMPRE lo stesso AudioContext globale
-    const ctx = getAudioContext();  // questo ora restituisce window.audioCtx
-
-    // 2. Assicurati che il contesto sia attivo
-    if (ctx.state === "suspended") {
-        console.log("⏳ AudioContext sospeso, provo a riprendere...");
-        await ctx.resume();
-        console.log("▶️ AudioContext stato:", ctx.state);
+    // 1. Distruggi eventuale AudioContext precedente
+    if (window.audioCtx) {
+        try { window.audioCtx.close(); } catch(e) {}
     }
 
-    // 3. Crea il masterGain SOLO se non esiste già
-    if (!window.masterGain) {
-        console.log("🎚️ Creo il masterGain globale");
+    // 2. Crea un NUOVO AudioContext DOPO il click
+    window.audioCtx = new AudioContext();
+    await window.audioCtx.resume();
 
-        window.masterGain = ctx.createGain();
-        window.masterGain.gain.value = 1.0;
+    // 3. Crea il masterGain
+    window.masterGain = window.audioCtx.createGain();
+    window.masterGain.gain.value = 1.0;
+    window.masterGain.connect(window.audioCtx.destination);
 
-        // Collegalo al destination del contesto attivo
-        window.masterGain.connect(ctx.destination);
-
-        if (isDebug) {
-            console.log("MASTERGAIN:", window.masterGain);
-            console.log("MASTERGAIN CONTEXT:", window.masterGain.context);
-            console.log("DESTINATION:", ctx.destination);
-        }
-    } else {
-        console.log("⚠️ masterGain esiste già, NON lo ricreo");
-    }
-
-    // 4. Flag di stato
+    // 4. Reset stato
     audioInitialized = true;
     audioReady = false;
     filesLoaded = 0;
 
-    // 5. Registra gli URL dei file audio
+    // 5. Registra gli URL
     for (let i = 0; i < TOTAL_FILES; i++) {
         audioFiles[i] = 'data/sound' + i + '.mp3';
-        filesLoaded++;
     }
 
-    // 6. Avvia il caricamento
+    // 6. Carica i file e crea i canali
     onAllAudioLoaded();
 }
-
 
 async function onAllAudioLoaded() {
     console.log("🔧 Creo i canali audio...");
