@@ -590,158 +590,177 @@ function keyPressed()
 
 function playMusicItem(tempo, pag, iEvento, eventoPrec) 
 {
-    console.log("IN: playMusicItem()"); 
-    //loop(); //riattiva il draw 
+    console.log("IN: playMusicItem()");
 
-    if (!audioReady) return; //non suona se audio non pronto
-    
-    //testSong.play(audiocontext.currentTime);
-    /*
-    let osc = new  p5.Oscillator('sine');
-    osc.freq(220);
-    osc.amp(1);
-    osc.connect(window.masterGain);
-    osc.start();
+    if (!audioReady) return;
 
-    console.log(JSON.stringify(testSong, null, 2));
-    return;
+    canPlay = false;
+    let timeLayer = tempo;
+    let e, p;
 
-    //channels[50].soundFile.disconnect(); // per sicurezza
-    //channels[50].soundFile.connect();    // connette al master output
-    channels[50].play(); //channels[50].play(audiocontext.currentTime);
-    console.log(JSON.stringify(channels[50], null, 2));
-
-    //channels[60].soundFile.disconnect(); // per sicurezza
-    //channels[60].soundFile.connect();    // connette al master output
-    channels[60].play(); //channels[60].play(audiocontext.currentTime);
-    console.log(JSON.stringify(channels[60], null, 2));
-
-    console.log("OUT:playMusicItem()"); 
-    return;
-    */
-    //Mydraw();
-    canPlay = false; 
-    let timeLayer = tempo; 
-    let e, p; 
+    // --- 1. ESECUZIONE EVENTO PRINCIPALE (logica originale) ---
     if (partitura.aPagina[pag].isLoaded) 
-    { 
-        //forza il disegno ma non esegue niente!!!
-        //partitura.aPagina[pag].aQuadrati[iEvento].Draw( pag + 1, iEvento + 1 );
-        //draw();
-        //esecuzione evento della partitura
-        if (isDebug) 
-        { 
-            console.log("\n======================================================================"); 
-            console.log("\nMAIN=" + (pag + 1) + " evento=" + (iEvento + 1)); 
-            console.log("\nLayer=" + (partitura.aPagina[pag].aQuadrati[iEvento].layer)); 
-        } 
-        
-        //si deve vedere se l'evento sonoro e' vuoto e deve essere preso da un riquadro
-        tempo = partitura.aPagina[pag].aQuadrati[iEvento].Play(tempo, partitura.aPagina[pag].aCentralSound, partitura.aPagina[pag].aSecondaryNotes, eventoPrec, false, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); //esecuzione dei layers
-        if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.One) 
-        { 
-            p = (pag + 1) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.One=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[p].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-        } 
-        else if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.Two) 
-        { 
-            p = (pag + 1) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Two=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 2) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Two=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-        } 
-        else if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.Three) 
-        { 
-            p = (pag + 1) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Three=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 2) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Three=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 3) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Three=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            if (Math.floor(random(2)) == 1) 
-            { 
-                p = (pag + 4) % dimPagine; 
-                e = Math.floor(random(dimQuadrati)); 
-                if (isDebug) console.log("\nLAYER.Three=" + p + " evento=" + e); 
-                timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            } 
-        } 
-        else if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.Five) 
-        { 
-            p = (pag + 1) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Five=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 2) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Five=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 3) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Five=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            p = (pag + 4) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER.Five=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            if (Math.floor(random(2)) == 1) 
-            { 
-                p = (pag + 5) % dimPagine; 
-                e = Math.floor(random(dimQuadrati)); 
-                if (isDebug) console.log("\nLAYER.Five=" + p + " evento=" + e); 
-                timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(timeLayer, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            } 
-        } 
-        else if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.After) 
-        { 
-            p = (pag + 1) % dimPagine; 
-            e = Math.floor(random(dimQuadrati)); 
-            if (isDebug) console.log("\nLAYER AFTER=" + p + " evento=" + e); 
-            timeLayer = partitura.aPagina[pag].aQuadrati[e].Play(tempo, partitura.aPagina[p].aCentralSound, partitura.aPagina[p].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-        } 
-        else if (partitura.aPagina[pag].aQuadrati[iEvento].layer == t_Layer.Between) 
-        { 
-            if (isDebug) console.log("\nLAYER Between=" + p + " evento=" + e); 
-        } 
-        //gestione flag:se ha una bandierina allora gestire il plus minus altrimenti suonare l'evento restituito
-        let evento; 
-        evento = InsertFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]); 
-        
-        if (evento != null) 
-        { 
-            if (isDebug) console.log("\nFLAG flagCentralSound=" + evento.flagCentralSound + " flagAccident=" + evento.flagAccident + " tempo in=" + tempo); 
-            tempo = evento.Play(tempo, partitura.aPagina[pag].aCentralSound, partitura.aPagina[pag].aSecondaryNotes, eventoPrec, true, partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS); 
-            if (isDebug) StampaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]); 
-            AggiornaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]); 
-            if (isDebug) StampaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]); 
+    {
+        if (isDebug) {
+            console.log("\n======================================================================");
+            console.log("\nMAIN=" + (pag + 1) + " evento=" + (iEvento + 1));
+            console.log("\nLayer=" + (partitura.aPagina[pag].aQuadrati[iEvento].layer));
         }
-    } 
 
-    if (isDebug) 
-    { 
-        console.log("\nEND playmusicItem=" + (pag + 1) + " evento=" + (iEvento + 1)); 
-        console.log("\n======================================================================"); 
+        // Esegue la logica dell’evento (NON suona ancora)
+        tempo = partitura.aPagina[pag].aQuadrati[iEvento].Play(
+            tempo,
+            partitura.aPagina[pag].aCentralSound,
+            partitura.aPagina[pag].aSecondaryNotes,
+            eventoPrec,
+            false,
+            partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+        );
+
+        // --- 2. ESECUZIONE DEI LAYER (logica originale) ---
+        let layer = partitura.aPagina[pag].aQuadrati[iEvento].layer;
+
+        if (layer == t_Layer.One) 
+        {
+            p = (pag + 1) % dimPagine;
+            e = Math.floor(random(dimQuadrati));
+            timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                timeLayer,
+                partitura.aPagina[p].aCentralSound,
+                partitura.aPagina[p].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+        }
+        else if (layer == t_Layer.Two) 
+        {
+            for (let k = 1; k <= 2; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.Three) 
+        {
+            for (let k = 1; k <= 3; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+            if (Math.floor(random(2)) == 1) {
+                p = (pag + 4) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.Five) 
+        {
+            for (let k = 1; k <= 4; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+            if (Math.floor(random(2)) == 1) {
+                p = (pag + 5) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.After) 
+        {
+            p = (pag + 1) % dimPagine;
+            e = Math.floor(random(dimQuadrati));
+            timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                tempo,
+                partitura.aPagina[p].aCentralSound,
+                partitura.aPagina[p].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+        }
+
+        // --- 3. GESTIONE FLAG (logica originale) ---
+        let evento = InsertFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
+
+        if (evento != null) {
+            tempo = evento.Play(
+                tempo,
+                partitura.aPagina[pag].aCentralSound,
+                partitura.aPagina[pag].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+            AggiornaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
+        }
+
+        // --- 4. ⭐ SUONO DELL’EVENTO CON WEB AUDIO ⭐ ---
+        let cs = partitura.aPagina[pag].aQuadrati[iEvento].centralSound;
+
+        if (cs && cs.notaMidi !== undefined) 
+        {
+            let nota = cs.notaMidi;
+            let durata = cs.duration || 0.5;
+            let volume = cs.volume || 1.0;
+            let timbro = cs.timbroCS;
+            let articulation = cs.articulation;
+
+            playNoteWithParams(
+                tempo,
+                durata,
+                nota,
+                volume,
+                timbro,
+                articulation
+            );
+        }
     }
-    partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo; 
-    mills = millis(); 
-    canPlay = true; 
-    fill(playColor);
-    Mydraw();//loop(); //riattiva il draw 
-    if (isDebug) console.log("OUT:playMusicItem()"); 
+
+    // --- 5. SALVATAGGI E USCITA ---
+    partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
+    mills = millis();
+    canPlay = true;
+
+    console.log("OUT: playMusicItem()");
     return partitura.aPagina[pag].aQuadrati[iEvento];
-} 
+}
 
 function update(x, y) 
 {
