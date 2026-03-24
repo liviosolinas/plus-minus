@@ -481,6 +481,203 @@ class Evento {
         return tempo;
     }
 
+    function playMusicItem(tempo, pag, iEvento, eventoPrec) 
+{
+    console.log("IN: playMusicItem()");
+
+    if (!audioReady) return;
+
+    canPlay = false;
+    let timeLayer = tempo;
+    let e, p;
+
+    if (partitura.aPagina[pag].isLoaded) 
+    {
+        if (isDebug) {
+            console.log("\n======================================================================");
+            console.log("\nMAIN=" + (pag + 1) + " evento=" + (iEvento + 1));
+            console.log("\nLayer=" + (partitura.aPagina[pag].aQuadrati[iEvento].layer));
+        }
+
+        // 1) Esegue la logica dell’evento (NON suona ancora)
+        tempo = partitura.aPagina[pag].aQuadrati[iEvento].Play(
+            tempo,
+            partitura.aPagina[pag].aCentralSound,
+            partitura.aPagina[pag].aSecondaryNotes,
+            eventoPrec,
+            false,
+            partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+        );
+
+        // 2) Layer (logica tua, invariata)
+        let layer = partitura.aPagina[pag].aQuadrati[iEvento].layer;
+
+        if (layer == t_Layer.One) 
+        {
+            p = (pag + 1) % dimPagine;
+            e = Math.floor(random(dimQuadrati));
+            timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                timeLayer,
+                partitura.aPagina[p].aCentralSound,
+                partitura.aPagina[p].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+        }
+        else if (layer == t_Layer.Two) 
+        {
+            for (let k = 1; k <= 2; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.Three) 
+        {
+            for (let k = 1; k <= 3; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+            if (Math.floor(random(2)) == 1) {
+                p = (pag + 4) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.Five) 
+        {
+            for (let k = 1; k <= 4; k++) {
+                p = (pag + k) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+            if (Math.floor(random(2)) == 1) {
+                p = (pag + 5) % dimPagine;
+                e = Math.floor(random(dimQuadrati));
+                timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                    timeLayer,
+                    partitura.aPagina[p].aCentralSound,
+                    partitura.aPagina[p].aSecondaryNotes,
+                    eventoPrec,
+                    true,
+                    partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+                );
+            }
+        }
+        else if (layer == t_Layer.After) 
+        {
+            p = (pag + 1) % dimPagine;
+            e = Math.floor(random(dimQuadrati));
+            timeLayer = partitura.aPagina[p].aQuadrati[e].Play(
+                tempo,
+                partitura.aPagina[p].aCentralSound,
+                partitura.aPagina[p].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+        }
+
+        // 3) Flag (logica tua, invariata)
+        let evento = InsertFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
+
+        if (evento != null) {
+            tempo = evento.Play(
+                tempo,
+                partitura.aPagina[pag].aCentralSound,
+                partitura.aPagina[pag].aSecondaryNotes,
+                eventoPrec,
+                true,
+                partitura.aPagina[pag].aQuadrati[iEvento].centralSound.timbroCS
+            );
+            AggiornaFlag(alFlags, partitura.aPagina[pag].aQuadrati[iEvento]);
+        }
+
+        // 4) 🔊 SUONO REALE CON WEB AUDIO (USANDO centralSound)
+        let cs = partitura.aPagina[pag].aQuadrati[iEvento].centralSound;
+
+        // Per ora: se è evento "noise" (isNoise true) non suoniamo nulla con i sample
+        if (cs && !cs.isNoise) 
+        {
+            // Prendiamo una nota "base" dalla tabella aCentralSound
+            let noteCS = partitura.aPagina[pag].aCentralSound[cs.tipoEvento];
+            if (noteCS && noteCS.length > 0) 
+            {
+                // Usa la prima nota come base
+                let baseNota = noteCS[0]; // oggetto Nota
+                let midiBase = baseNota.altezza; // già in indice 0..108
+
+                // Durata di default (se non hai ancora un campo dedicato)
+                let durata = 0.8;
+                let volume = 1.0;
+
+                // Salviamo dentro centralSound per eventuali usi futuri
+                cs.notaMidi = midiBase;
+                cs.duration = durata;
+                cs.volume = volume;
+                if (cs.articulation === undefined) {
+                    cs.articulation = t_Articulation.None;
+                }
+
+                if (isDebug) {
+                    console.log("SUONO NOTA MIDI:", cs.notaMidi, 
+                                "durata:", cs.duration, 
+                                "timbroCS:", cs.timbroCS, 
+                                "articulation:", cs.articulation);
+                }
+
+                // Chiamata reale al motore WebAudio
+                playNoteWithParams(
+                    tempo,
+                    cs.duration,
+                    cs.notaMidi,
+                    cs.volume,
+                    cs.timbroCS,
+                    cs.articulation
+                );
+            }
+        }
+    }
+
+    partitura.aPagina[pag].aQuadrati[iEvento].timeSave = tempo;
+    mills = millis();
+    canPlay = true;
+
+    console.log("OUT: playMusicItem()");
+    return partitura.aPagina[pag].aQuadrati[iEvento];
+}
+
+/*
 function playMusicItem(tempo, pag, iEvento, eventoPrec) 
 {
     console.log("IN: playMusicItem()");
@@ -676,6 +873,260 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     console.log("OUT: playMusicItem()");
     return partitura.aPagina[pag].aQuadrati[iEvento];
 }
+*/
+    
+    Play(tempo, aCentralSound, aSecondaryNotes, eventoPrec, isLayer, timbro) 
+    {
+        let inizioCS = 0.0;
+        let fineCS = 0.0;
+        let ds = 0.5;
+        let dp = 0.01;
+        let da = 0.5;
+        let as = 0.05;
+        let ap = 0.5;
+        let aa = 0.05;
+    
+        // Gestione livello generale
+        const ctx = getAudioContext();
+        
+        if (this.centralSound.timbroCS == t_Timbre.Hard ||
+            this.centralSound.timbroNoise == t_Timbre.Hard) 
+        {
+            masterGain.gain.setValueAtTime(1.0, ctx.currentTime);
+        } 
+        else if (this.centralSound.timbroCS == t_Timbre.Soft ||
+                 this.centralSound.timbroNoise == t_Timbre.Soft) 
+        {
+            masterGain.gain.setValueAtTime(0.1, ctx.currentTime);
+        } 
+        else 
+        {
+            masterGain.gain.setValueAtTime(0.5, ctx.currentTime);
+        }
+        
+    
+        // Note secondarie PRIMA del suono centrale
+        if (this.secondaryNote.quando == t_SecNoteWhen.Before) 
+        {
+            inizioCS = this.playSecondaryNotes(
+                aSecondaryNotes,
+                this.secondaryNote.index - 1,
+                tempo,
+                ds,
+                dp,
+                da,
+                as,
+                ap,
+                aa,
+                timbro
+            );
+        }
+    
+        // Calcolo trasposizione in base all'evento precedente
+        let traspose = 0;
+        if (eventoPrec != null && eventoPrec.isValido) 
+        {
+            let noteCS = aCentralSound[this.centralSound.tipoEvento];
+            let notaTrasp = null;
+    
+            if (this.getHairpin() == t_Hairpins.Cresc) 
+            {
+                if (this.hairpinValue < noteCS.length) 
+                {
+                    notaTrasp = noteCS[this.hairpinValue];
+                    traspose = notaTrasp.altezza - noteCS[0].altezza;
+                } 
+                else 
+                {
+                    traspose =
+                        (noteCS[noteCS.length - 1].altezza -
+                         noteCS[0].altezza) * this.hairpinValue;
+                }
+            } 
+            else if (this.getHairpin() == t_Hairpins.Decr) 
+            {
+                if (this.hairpinValue < noteCS.length) 
+                {
+                    notaTrasp = noteCS[this.hairpinValue];
+                    traspose = notaTrasp.altezza - noteCS[0].altezza;
+                } 
+                else 
+                {
+                    traspose =
+                        (noteCS[noteCS.length - 1].altezza -
+                         noteCS[0].altezza) *
+                        this.hairpinValue;
+                }
+                traspose = -traspose;
+            }
+        }
+    
+        // 🔊 GESTIONE GRANULARI (parte delicata)
+        if (!isLayer) 
+        {
+            // Se i granulari non sono ancora pronti, non fare nulla
+            if (gspHard && gspSoft) 
+            {
+                // Ferma sempre tutto prima
+                //gspHard.stop();
+                //gspSoft.stop();
+    
+                if (this.centralSound.timbroNoise == t_Timbre.Hard) 
+                {
+                    randomnessGraniHard.setValue(
+                        random(
+                            k_randomnessGraniHard - s_randomnessGraniHard,
+                            k_randomnessGraniHard + s_randomnessGraniHard
+                        )
+                    );
+                    pitchGraniHard.setValue(
+                        random(1.0 - pitchRange, 1.0 + pitchRange)
+                    );
+                    grainSizeGraniHard.setValue(
+                        random(
+                            k_grainSizeGraniHard - s_grainSizeGraniHard,
+                            k_grainSizeGraniHard + s_grainSizeGraniHard
+                        )
+                    );
+                    intervalGraniHard.setValue(
+                        random(
+                            k_intervalGraniHard - s_intervalGraniHard,
+                            k_intervalGraniHard + s_intervalGraniHard
+                        )
+                    );
+    
+                    //gspHard.start();
+                }
+                else if (this.centralSound.timbroNoise == t_Timbre.Soft) 
+                {
+                    randomnessGraniSoft.setValue(
+                        random(
+                            k_randomnessGraniSoft - s_randomnessGraniSoft,
+                            k_randomnessGraniSoft + s_randomnessGraniSoft
+                        )
+                    );
+                    pitchGraniSoft.setValue(
+                        random(1.0 - pitchRange, 1.0 + pitchRange)
+                    );
+                    grainSizeGraniSoft.setValue(
+                        random(
+                            k_grainSizeGraniSoft - s_grainSizeGraniSoft,
+                            k_grainSizeGraniSoft + s_grainSizeGraniSoft
+                        )
+                    );
+                    intervalGraniSoft.setValue(
+                        random(
+                            k_intervalGraniSoft - s_intervalGraniSoft,
+                            k_intervalGraniSoft + s_intervalGraniSoft
+                        )
+                    );
+    
+                    //gspSoft.start();
+                }
+                else 
+                {
+                    // Nessun timbro Noise: granulari fermi
+                    //gspHard.stop();
+                    //gspSoft.stop();
+                }
+            }
+        }
+    
+        // Suono centrale
+        fineCS = this.playCentralSound(
+            aCentralSound,
+            this.centralSound.tipoEvento,
+            inizioCS,
+            traspose,
+            timbro
+        );
+    
+        // (blocchi sui tipi di evento lasciati invariati)
+        if (this.centralSound.tipoEvento == t_Event.A_Z) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.AZ) {
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.Z_A) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.A_Z_A) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.AZ_A) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.A_AZ) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+        if (this.centralSound.tipoEvento == t_Event.A_AZ_A) {
+            if (this.centralSound.timbroCS == t_Timbre.Hard) {}
+            if (this.centralSound.timbroCS == t_Timbre.Soft) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Hard) {}
+            if (this.centralSound.timbroNoise == t_Timbre.Soft) {}
+        }
+    
+        // Note secondarie DURANTE il suono centrale
+        if (this.secondaryNote.quando == t_SecNoteWhen.During) {
+            this.playSecondaryNotes(
+                aSecondaryNotes,
+                this.secondaryNote.index - 1,
+                inizioCS,
+                ds,
+                dp,
+                da,
+                as,
+                ap,
+                aa,
+                timbro
+            );
+        }
+    
+        // Note secondarie DOPO il suono centrale
+        if (this.secondaryNote.quando == t_SecNoteWhen.After) {
+            this.playSecondaryNotes(
+                aSecondaryNotes,
+                this.secondaryNote.index - 1,
+                fineCS,
+                ds,
+                dp,
+                da,
+                as,
+                ap,
+                aa,
+                timbro
+            );
+        }
+    
+        // Durate (rest lasciati commentati come nel tuo codice)
+        if (this.durations == t_Durations.Long) {
+        } else if (this.durations == t_Durations.Medium) {
+        } else if (this.durations == t_Durations.Short) {
+        } else if (this.durations == t_Durations.No) {
+        } else if (this.durations == t_Durations.LastsUntilMiddle) {
+        } else if (this.durations == t_Durations.LastsUntilEnd) {
+        } else if (this.durations == t_Durations.LastsAsLong) {
+        }
+    
+        return fineCS;
+    }
+
     
     Draw(pag, evento) 
     {
