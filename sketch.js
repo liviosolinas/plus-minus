@@ -455,32 +455,24 @@ function Mydraw()
 async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
-    // 1. Distruggi eventuale AudioContext precedente
-    if (window.audioCtx) {
-        try { window.audioCtx.close(); } catch(e) {}
-    }
-
-    // 2. Crea un NUOVO AudioContext DOPO il click
+    // 1. Crea AudioContext DOPO il click
     window.audioCtx = new AudioContext();
     await window.audioCtx.resume();
 
-    // 3. Crea il masterGain
+    // 2. Crea masterGain SUBITO
     window.masterGain = window.audioCtx.createGain();
     window.masterGain.gain.value = 1.0;
     window.masterGain.connect(window.audioCtx.destination);
 
-    // 4. Reset stato
+    // 3. Ora puoi creare i canali
     audioInitialized = true;
     audioReady = false;
-    filesLoaded = 0;
 
-    // 5. Registra gli URL
     for (let i = 0; i < TOTAL_FILES; i++) {
         audioFiles[i] = 'data/sound' + i + '.mp3';
     }
 
-    // 6. Carica i file e crea i canali
-    onAllAudioLoaded();
+    onAllAudioLoaded();  // <-- qui il masterGain ESISTE già
 }
 
 async function onAllAudioLoaded() {
