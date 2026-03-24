@@ -451,13 +451,18 @@ async function initAudio() {
     console.log("🎵 Inizializzo l’audio...");
 
     // CREA SEMPRE un nuovo AudioContext dentro un gesto utente
-    audioCtx = new AudioContext();
-    await audioCtx.resume();
+    if (!window.audioCtx || window.audioCtx.state === "closed") {
+        window.audioCtx = new AudioContext();
+    }
+
+    if (window.audioCtx.state !== "running") {
+        await window.audioCtx.resume();
+    }
 
     // MASTER GAIN
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = 1.0;
-    masterGain.connect(audioCtx.destination);
+    window.masterGain = audioCtx.createGain();
+    window.masterGain.gain.value = 1.0;
+    window.masterGain.connect(audioCtx.destination);
 
 
     audioFiles = [];
