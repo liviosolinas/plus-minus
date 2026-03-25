@@ -970,7 +970,7 @@ function mouseMoved(x, y)
 
     if (isDebug) 
     {
-        console.log("mouseMoved: mouseX=" + mouseX + " mouseY=" + mouseY);
+        //console.log("mouseMoved: mouseX=" + mouseX + " mouseY=" + mouseY);
         // id = pickGR1.get(mouseX,mouseY)[0]; 
         // console.log("id=" + id);
     }
