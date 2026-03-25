@@ -1044,7 +1044,7 @@ function mouseMoved(x, y)
     //regolazione tra i diversi strati sonori
     if((mouseX >= 317 && mouseY >= 322 && mouseX <= 360 && mouseY <= 360 ) )
     {    
-        if( boxHasBlack(317, 322, 360 - 317, 360 - 322))
+        //if( boxHasBlack(317, 322, 360 - 317, 360 - 322))
         {
             evidenziaRiga(10);
         }        
