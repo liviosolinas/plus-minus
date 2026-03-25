@@ -821,7 +821,7 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
         //gspHard.stop();
         //gspSoft.stop();
         Mydraw();   // 🔥 questo fa avanzare l’ideogramma al momento giusto
-    }, durataEvento);
+    }, durataEvento + 500);
     
     console.log("OUT: playMusicItem()");
     return partitura.aPagina[pag].aQuadrati[iEvento];
