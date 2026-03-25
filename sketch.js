@@ -792,9 +792,9 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Long) {
         if(durataEvento < 10000 ) durataEvento = 10000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Medium) {
-        if(durataEvento < 7000 ) durataEvento = 7000;
+        if(durataEvento < 7500 ) durataEvento = 7500;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Short) {
-        if(durataEvento < 3000 ) durataEvento = 3000;
+        if(durataEvento < 4000 ) durataEvento = 4000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.No) {
         if(durataEvento < 1000 ) durataEvento = 1000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsUntilMiddle) {
