@@ -461,7 +461,7 @@ async function setupMusic() {
 
     // --- HARD ---
     const bufferHard = await loadSample('data/GraniHard.mp3');
-    gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain);
+    gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain , k_intervalGraniHard);
 
     randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
     intervalGraniHard   = new Glide(ctx, k_intervalGraniHard, 10);
@@ -475,7 +475,7 @@ async function setupMusic() {
     
     // --- SOFT ---
     const bufferSoft = await loadSample('data/GraniSoft.mp3');
-    gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain);
+    gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain , k_intervalGraniSoft);
     
     randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
     intervalGraniSoft   = new Glide(ctx, k_intervalGraniSoft, 10);
