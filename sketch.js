@@ -461,7 +461,7 @@ async function setupMusic() {
 
     // --- HARD ---
     const bufferHard = await loadSample('data/GraniHard.mp3');
-    gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain , k_intervalGraniHard);
+    gspHard = new GranularSamplePlayer(ctx, bufferHard, masterGain , k_intervalGraniHard , s_grainSizeGraniHard);
 
     randomnessGraniHard = new Glide(ctx, k_randomnessGraniHard, 100);
     intervalGraniHard   = new Glide(ctx, k_intervalGraniHard, 10);
@@ -470,12 +470,12 @@ async function setupMusic() {
     pitchGraniHard      = new Glide(ctx, 1, 20);
 
     gspHard.setRandomness(randomnessGraniHard.value);
-    gspHard.setGrainSize(grainSizeGraniHard.value);
+    gspHard.setGrainSize(s_grainSizeGraniHard) ; //grainSizeGraniHard.value);
     gspHard.setPitch(pitchGraniHard.value);
     
     // --- SOFT ---
     const bufferSoft = await loadSample('data/GraniSoft.mp3');
-    gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain , k_intervalGraniSoft);
+    gspSoft = new GranularSamplePlayer(ctx, bufferSoft, masterGain , k_intervalGraniSoft , s_grainSizeGraniSoft);
     
     randomnessGraniSoft = new Glide(ctx, k_randomnessGraniSoft, 100);
     intervalGraniSoft   = new Glide(ctx, k_intervalGraniSoft, 10);
@@ -484,7 +484,7 @@ async function setupMusic() {
     pitchGraniSoft      = new Glide(ctx, 1, 20);
 
     gspSoft.setRandomness(randomnessGraniSoft.value);
-    gspSoft.setGrainSize(grainSizeGraniSoft.value);
+    gspSoft.setGrainSize(s_grainSizeGraniSoft); //grainSizeGraniSoft.value);
     gspSoft.setPitch(pitchGraniSoft.value);
     
 }
