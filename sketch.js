@@ -413,10 +413,14 @@ async function btnPlay() {
     playSW = !playSW;
     if(playSW) 
     {
+        // 2. Fade-in
+        masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.01);
         masterGain.gain.setValueAtTime(1, audioCtx.currentTime);
     }
     else
     {
+        // 1. Fade-out
+        masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.01);
         masterGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
     }   
     Mydraw();
