@@ -413,7 +413,7 @@ async function btnPlay() {
     }
     else
     {
-        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
     }   
     Mydraw();
 }
