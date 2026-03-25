@@ -355,7 +355,7 @@ function Mydraw()
         if (isDebug) console.log("IN: playMusicItem");
         masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.01);
         eventoPrec = playMusicItem(tempo, pag, iEvento, eventoPrec);
-        masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.01);
+        masterGain.gain.setTargetAtTime(1, now + 0.015, 0.01);
         if (isDebug) console.log("OUT: playMusicItem");
 
         // Calcola la durata dell’evento (in secondi)
