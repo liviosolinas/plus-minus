@@ -1,13 +1,13 @@
 
 class GranularSamplePlayer {
-    constructor(audioContext, buffer, masterGain , interval) {
+    constructor(audioContext, buffer, masterGain , interval , grainSize ) {
         this.context = audioContext;
         this.buffer = buffer;
         this.masterGain = masterGain;
 
         this.isPlaying = false;
         this.interval = interval;
-        this.grainSize = 0.1;
+        this.grainSize = grainSize / 1000;
         this.overlap = 0.02;
         this.randomness = 0.5;
         this.pitch = 1.0;
