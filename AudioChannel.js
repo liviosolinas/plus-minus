@@ -40,7 +40,7 @@ class GranularSamplePlayer {
         this.intervalId = setInterval(() => {
             this.playGrain();
         }, interval);
-        console.log("START GRANO");
+        console.log("START GRANO interval" , interval);
     }
 
     stop() {
