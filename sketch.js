@@ -798,13 +798,13 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     let durataEvento = tempo * 1000;
      // Durate (rest lasciati commentati come nel tuo codice)
     if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Long) {
-        if(durataEvento < 10000 ) durataEvento = 10000;
+        if(durataEvento < 12000 ) durataEvento = 12000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Medium) {
-        if(durataEvento < 7500 ) durataEvento = 7500;
+        if(durataEvento < 8000 ) durataEvento = 8000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.Short) {
         if(durataEvento < 4000 ) durataEvento = 4000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.No) {
-        if(durataEvento < 1000 ) durataEvento = 1000;
+        if(durataEvento < 2000 ) durataEvento = 2000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsUntilMiddle) {
         if(durataEvento < 4000 ) durataEvento = 4000;
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsUntilEnd) {
@@ -812,7 +812,9 @@ function playMusicItem(tempo, pag, iEvento, eventoPrec)
     } else if (partitura.aPagina[pag].aQuadrati[iEvento].durations == t_Durations.LastsAsLong) {
         if(durataEvento < 4000 ) durataEvento = 4000;
     }
-    
+
+    if(durataEvento < 2000 ) durataEvento = 2000;
+        
     // blocchiamo l’avanzamento finché non è passato il tempo musicale
     setTimeout(() => {
         canPlay = true;
