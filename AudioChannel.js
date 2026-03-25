@@ -1,12 +1,12 @@
 
 class GranularSamplePlayer {
-    constructor(audioContext, buffer, masterGain) {
+    constructor(audioContext, buffer, masterGain , interval) {
         this.context = audioContext;
         this.buffer = buffer;
         this.masterGain = masterGain;
 
         this.isPlaying = false;
-
+        this.interval = interval;
         this.grainSize = 0.1;
         this.overlap = 0.02;
         this.randomness = 0.5;
@@ -35,12 +35,12 @@ class GranularSamplePlayer {
         if (this.isPlaying || !this.buffer) return;
         this.isPlaying = true;
 
-        const interval = Math.max(5, (this.grainSize - this.overlap) * 1000);
+        //const interval = Math.max(5, (this.grainSize - this.overlap) * 1000);
 
         this.intervalId = setInterval(() => {
             this.playGrain();
         }, interval);
-        console.log("START GRANO interval" , interval);
+        console.log("START GRANO interval" , this.interval);
     }
 
     stop() {
