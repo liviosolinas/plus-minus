@@ -407,6 +407,14 @@ async function btnPlay() {
     }
     */
     playSW = !playSW;
+    if(playSW) 
+    {
+        masterGain.gain.setValueAtTime(1, audioCtx.currentTime);
+    }
+    else
+    {
+        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    }   
     Mydraw();
 }
 
