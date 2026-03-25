@@ -970,7 +970,7 @@ function mouseMoved(x, y)
 
     if (isDebug) 
     {
-        //console.log("mouseMoved: mouseX=" + mouseX + " mouseY=" + mouseY);
+        console.log("mouseMoved: mouseX=" + mouseX + " mouseY=" + mouseY);
         // id = pickGR1.get(mouseX,mouseY)[0]; 
         // console.log("id=" + id);
     }
@@ -1046,6 +1046,7 @@ function mouseMoved(x, y)
     {    
         //if( boxHasBlack(317, 322, 360 - 317, 360 - 322))
         {
+            console.log("evidenziaRiga(10)");
             evidenziaRiga(10);
         }        
     }
