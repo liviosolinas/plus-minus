@@ -39,6 +39,7 @@ class GranularSamplePlayer {
         this.intervalId = setInterval(() => {
             this.playGrain();
         }, interval);
+        console.log("START GRANO");
     }
 
     stop() {
@@ -47,6 +48,7 @@ class GranularSamplePlayer {
             this.intervalId = null;
         }
         this.isPlaying = false;
+        console.log("STOP GRANO");
     }
 
     playGrain() {
@@ -60,9 +62,14 @@ class GranularSamplePlayer {
         grain.playbackRate.value = this.pitch;
     
         const gainNode = this.context.createGain();
-        gainNode.gain.setValueAtTime(0, this.context.currentTime);
-        gainNode.gain.linearRampToValueAtTime(1, this.context.currentTime + 0.01);
-        gainNode.gain.linearRampToValueAtTime(0, this.context.currentTime + grainSize - 0.01);
+        const now = this.context.currentTime;
+        const attack = Math.min(0.01, grainSize * 0.3);
+        const release = Math.min(0.01, grainSize * 0.3);
+        
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(1, now + attack);
+        gainNode.gain.linearRampToValueAtTime(0, now + grainSize - release);
+
     
         grain.connect(gainNode);
         gainNode.connect(this.outputGain);
