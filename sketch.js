@@ -353,8 +353,10 @@ function Mydraw()
         let tempo = 0.0;
 
         if (isDebug) console.log("IN: playMusicItem");
-        masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.01);
-        eventoPrec = playMusicItem(tempo, pag, iEvento, eventoPrec);
+        const now = audioCtx.currentTime;
+        masterGain.gain.setTargetAtTime(0, now, 0.01);        
+        eventoPrec = playMusicItem(tempo, pag, iEvento, eventoPrec);        
+        // fade-in schedulato 15 ms dopo
         masterGain.gain.setTargetAtTime(1, now + 0.015, 0.01);
         if (isDebug) console.log("OUT: playMusicItem");
 
