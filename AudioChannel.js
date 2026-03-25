@@ -75,7 +75,7 @@ class GranularSamplePlayer {
         grain.connect(gainNode);
         gainNode.connect(this.outputGain);
 
-        console.log("GRANO:", this.context.currentTime);
+        //console.log("GRANO:", this.context.currentTime);
 
         grain.start(this.context.currentTime, startTime, grainSize);
     }
