@@ -1,80 +1,153 @@
 //voice pool
-let audioCtx;
 function getAudioContext() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    return audioCtx;
+    return window.audioCtx;
 }
 
-async function loadSample(url) {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    return await getAudioContext().decodeAudioData(arrayBuffer);
-}
+async function loadSample(url, retries = 3, delayMs = 200) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (!response.ok) throw new Error("HTTP " + response.status);
 
-class Voice {
-    constructor(ctx, buffer, masterGain) {
-        this.ctx = ctx;
-        this.buffer = buffer;
+            const arrayBuffer = await response.arrayBuffer();
+            return await window.audioCtx.decodeAudioData(arrayBuffer);
 
-        this.gain = ctx.createGain();
-        this.filter = ctx.createBiquadFilter();
-        this.filter.type = "lowpass";
+        } catch (err) {
+            console.warn(`Errore caricando ${url} (tentativo ${attempt}):`, err);
 
-        this.gain.connect(this.filter);
-        this.filter.connect(masterGain);
-
-        this.busy = false;
-    }
-
-    play(volume, pitch, duration, filterFreq) {
-        if (this.busy) return false;
-
-        this.busy = true;
-
-        const src = this.ctx.createBufferSource();
-        src.buffer = this.buffer;
-        src.playbackRate.value = pitch;
-
-        src.connect(this.gain);
-
-        const now = this.ctx.currentTime;
-
-        this.filter.frequency.setValueAtTime(filterFreq, now);
-
-        this.gain.gain.setValueAtTime(0, now);
-        this.gain.gain.linearRampToValueAtTime(volume, now + 0.01);
-        this.gain.gain.linearRampToValueAtTime(0, now + duration);
-
-        src.start(now);
-        src.stop(now + duration);
-
-        src.onended = () => {
-            this.busy = false;
-        };
-
-        return true;
-    }
-}
-
-class AudioChannel {
-    constructor(buffer, masterGain, voices = 16) {
-        this.voices = [];
-        const ctx = getAudioContext();
-
-        for (let i = 0; i < voices; i++) {
-            this.voices.push(new Voice(ctx, buffer, masterGain));
-        }
-    }
-
-    play(volume, pitch, duration, filterFreq) {
-        for (let v of this.voices) {
-            if (!v.busy) {
-                v.play(volume, pitch, duration, filterFreq);
-                return;
+            if (attempt === retries) {
+                throw new Error(`Impossibile caricare ${url} dopo ${retries} tentativi`);
             }
+
+            await new Promise(res => setTimeout(res, delayMs));
         }
-        console.warn("⚠️ Tutte le voci occupate!");
+    }
+}
+
+
+// =========================
+//        VOICE
+// =========================
+class Voice {
+  constructor(ctx, buffer, outputNode) {
+    this.ctx = ctx;
+    this.buffer = buffer;
+    this.outputNode = outputNode;
+
+    this.source = null;
+    this.gainNode = null;
+    this.isPlaying = false;
+  }
+
+  play(startTime = 0, offset = 0, duration = null, gain = 1.0, playbackRate = 1.0) {
+    if (!this.buffer) return;
+
+    const ctx = this.ctx;
+
+    this.source = ctx.createBufferSource();
+    this.source.buffer = this.buffer;
+    this.source.playbackRate.value = playbackRate;
+
+    this.gainNode = ctx.createGain();
+    this.gainNode.gain.value = gain;
+
+    this.source.connect(this.gainNode);
+    this.gainNode.connect(this.outputNode);
+
+    const when = ctx.currentTime + startTime;
+
+    if (duration != null) {
+      this.source.start(when, offset, duration);
+    } else {
+      this.source.start(when, offset);
+    }
+
+    this.isPlaying = true;
+
+    this.source.onended = () => {
+      this.isPlaying = false;
+      this.source.disconnect();
+      this.gainNode.disconnect();
+      this.source = null;
+      this.gainNode = null;
+    };
+  }
+
+  stop() {
+    if (this.source && this.isPlaying) {
+      this.source.stop();
+      this.isPlaying = false;
+    }
+  }
+}
+
+
+
+// =========================
+//     AUDIO CHANNEL
+// =========================
+class AudioChannel {
+    constructor(ctx, url, maxVoices, outputNode) {
+        this.ctx = ctx;
+        this.url = url;
+        this.maxVoices = maxVoices;
+        this.outputNode = outputNode;
+
+        this.buffer = null;
+        this.voices = [];
+        this.loaded = false;
+    }
+
+    async load() {
+        try {
+            // Scarica il file audio
+            const response = await fetch(this.url);
+            const arrayBuffer = await response.arrayBuffer();
+
+            // Decodifica in AudioBuffer
+            this.buffer = await this.ctx.decodeAudioData(arrayBuffer);
+
+            // Crea il pool di voci
+            this.voices = [];
+            for (let i = 0; i < this.maxVoices; i++) {
+                this.voices.push(new Voice(this.ctx, this.buffer, this.outputNode));
+            }
+
+            this.loaded = true;
+            console.log(`🎧 Caricato ${this.url} con ${this.maxVoices} voci`);
+
+        } catch (err) {
+            console.error(`❌ Errore nel caricamento di ${this.url}:`, err);
+        }
+    }
+
+    getFreeVoice() {
+        for (const v of this.voices) {
+            if (!v.isPlaying) return v;
+        }
+        // Se tutte occupate, riusa la prima
+        return this.voices[0];
+    }
+
+   play(options = {}) 
+    {
+        if (!this.loaded || !this.buffer) return;
+    
+        const {
+            startTime = this.context.currentTime,   // 🔥 parte nel futuro
+            offset = 0,
+            duration = null,                        // 🔥 puoi passare durata
+            gain = 1.0,
+            playbackRate = 1.0
+        } = options;
+    
+        const voice = this.getFreeVoice();
+        voice.play(startTime, offset, duration, gain, playbackRate);
+    }
+
+    stopAll() {
+        for (const v of this.voices) {
+            v.stop();
+        }
     }
 }
